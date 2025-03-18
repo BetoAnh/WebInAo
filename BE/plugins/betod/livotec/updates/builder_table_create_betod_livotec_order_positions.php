@@ -13,7 +13,7 @@ class BuilderTableCreateBetodLivotecOrderPositions extends Migration
             $table->timestamp('created_at')->nullable();
             $table->timestamp('updated_at')->nullable();
             $table->integer('order_id');
-            $table->integer('item_id');
+            $table->integer('product_id');
             $table->integer('price')->nullable();
             $table->integer('quantity')->nullable();
         });
