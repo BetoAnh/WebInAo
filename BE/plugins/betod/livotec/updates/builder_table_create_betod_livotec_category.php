@@ -14,6 +14,12 @@ class BuilderTableCreateBetodLivotecCategory extends Migration
             $table->string('slug')->nullable();
             $table->timestamp('created_at')->nullable();
             $table->timestamp('updated_at')->nullable();
+            $table->integer('parent_id')->nullable();
+            $table->integer('nest_left')->nullable();
+            $table->integer('nest_right')->nullable();
+            $table->integer('nest_depth')->nullable();
+            $table->string('description')->nullable();
+            $table->text('property')->nullable();
         });
     }
     

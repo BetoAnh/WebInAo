@@ -15,6 +15,9 @@ class BuilderTableCreateBetodLivotecOrders extends Migration
             $table->integer('user_id')->nullable();
             $table->integer('status_id')->nullable();
             $table->text('property')->nullable();
+            $table->integer('status_id')->default(0)->change();
+            $table->integer('price')->nullable();
+            $table->string('order_code')->unique();;
         });
     }
     
