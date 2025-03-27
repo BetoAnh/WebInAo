@@ -19,7 +19,7 @@
 </template>
 
 <script setup>
-import { ref, defineEmits } from "vue";
+import { ref } from "vue";
 import { ClCloseLg } from "@kalimahapps/vue-icons";
 const emit = defineEmits(["closeMenu"]);
 

@@ -1,0 +1,23 @@
+v1.0.1:
+    - 'Initialize plugin'
+v1.0.2:
+    - 'Created table betod_webinao_products'
+    - builder_table_create_betod_webinao_products.php
+v1.0.3:
+    - 'Created table betod_webinao_variants'
+    - builder_table_create_betod_webinao_variants.php
+v1.0.4:
+    - 'Created table betod_webinao_categories'
+    - builder_table_create_betod_webinao_categories.php
+v1.0.5:
+    - 'Updated table betod_webinao_products'
+    - builder_table_update_betod_webinao_products.php
+v1.0.6:
+    - 'Updated table betod_webinao_products'
+    - builder_table_update_betod_webinao_products_2.php
+v1.0.7:
+    - 'Updated table betod_webinao_products'
+    - builder_table_update_betod_webinao_products_3.php
+v1.0.8:
+    - 'Updated table betod_webinao_products'
+    - builder_table_update_betod_webinao_products_4.php

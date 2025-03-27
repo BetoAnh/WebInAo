@@ -97,7 +97,6 @@
 </template>
 <script setup>
 import { ref, computed, onMounted } from "vue";
-import { getDataFromIndexedDB } from "@/store/indexedDB";
 import { ClCloseLg, BxSearch } from "@kalimahapps/vue-icons";
 
 const emit = defineEmits(["closeSearch"]);

@@ -1,0 +1,26 @@
+fields:
+    product:
+        label: 'Sản phẩm'
+        nameFrom: name
+        descriptionFrom: description
+        emptyOption: '--Sản phẩm--'
+        span: auto
+        readOnly: 1
+        required: 1
+        type: relation
+    color:
+        label: Màu
+        span: auto
+        type: text
+    size:
+        label: Size
+        span: auto
+        type: text
+    price:
+        label: Giá
+        span: auto
+        type: number
+    stock:
+        label: 'Số lượng'
+        span: auto
+        type: text

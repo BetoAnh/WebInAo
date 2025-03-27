@@ -117,7 +117,7 @@
 </template>
 
 <script setup>
-import DefaultLayout from "./layouts/DefaultLayout.vue";
+import DefaultLayout from "../components/layouts/DefaultLayout.vue";
 import { ref, onMounted, watch } from "vue";
 import store from "@/store/store";
 import { CgClose } from "@kalimahapps/vue-icons";

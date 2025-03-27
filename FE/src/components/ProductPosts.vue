@@ -23,8 +23,8 @@ defineProps({
 }
 
 .post ul li::before {
-  content: "•";
-  color: #38b6ac;
+  content: "-";
+  color: #4f81bd;
   font-size: 1.5em;
   position: absolute;
   left: 0;

@@ -1,0 +1,10 @@
+name: Products
+form: $/betod/webinao/models/products/fields.yaml
+modelClass: Betod\Webinao\Models\Products
+defaultRedirect: betod/webinao/products
+create:
+    redirect: 'betod/webinao/products/update/:id'
+    redirectClose: betod/webinao/products
+update:
+    redirect: betod/webinao/products
+    redirectClose: betod/webinao/products

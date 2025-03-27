@@ -1,0 +1,43 @@
+columns:
+    id:
+        label: ID
+        type: number
+        searchable: true
+        sortable: true
+    product_id:
+        label: 'Sản phẩm'
+        type: text
+        searchable: true
+        sortable: true
+        select: name
+        relation: product
+    color:
+        label: Màu
+        type: text
+        searchable: true
+        sortable: true
+    size:
+        label: Size
+        type: text
+        searchable: true
+        sortable: true
+    price:
+        label: Giá
+        type: number
+        searchable: true
+        sortable: true
+    stock:
+        label: 'Số lượng'
+        type: number
+        searchable: true
+        sortable: true
+    created_at:
+        label: 'Ngày tạo'
+        type: datetime
+        searchable: true
+        sortable: true
+    updated_at:
+        label: 'Ngày sửa'
+        type: datetime
+        searchable: true
+        sortable: true

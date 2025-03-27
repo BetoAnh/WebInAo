@@ -1,0 +1,17 @@
+scopes:
+    color:
+        label: 'Màu'
+        type: text
+        conditions: color = :value
+
+    size:
+        label: 'Size'
+        type: text
+        conditions: size = :value
+
+    product:
+        label: 'Sản phẩm'
+        type: group
+        modelClass: Betod\Webinao\Models\Products
+        nameFrom: name
+        conditions: product_id = :value

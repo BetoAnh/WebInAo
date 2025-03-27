@@ -1,0 +1,88 @@
+tabs:
+    fields:
+        variant:
+            label: ''
+            nameFrom: name
+            descriptionFrom: description
+            span: full
+            type: relation
+            tab: Variants
+            controller:
+                label: Variant
+                view:
+                    list: ~/plugins/betod/webinao/models/variants/columns.yaml
+                manage:
+                    form: ~/plugins/betod/webinao/models/variants/fields.yaml
+secondaryTabs:
+    fields:
+        property:
+            label: 'Thông Số'
+            prompt: 'Add new item'
+            displayMode: accordion
+            span: full
+            type: repeater
+            tab: 'Mô tả sản phẩm'
+            form:
+                fields:
+                    label:
+                        label: 'Thuộc Tính'
+                        span: auto
+                        type: text
+                    value:
+                        label: 'Giá trị'
+                        size: ''
+                        span: auto
+                        type: textarea
+fields:
+    name:
+        label: 'Tên sản phẩm'
+        span: auto
+        type: text
+    slug:
+        label: Slug
+        span: auto
+        preset:
+            field: name
+            type: slug
+        type: text
+    category:
+        label: 'Danh mục'
+        nameFrom: name
+        descriptionFrom: description
+        emptyOption: '--Danh mục--'
+        span: auto
+        type: relation
+    description:
+        label: 'Mô tả'
+        size: small
+        span: auto
+        type: richeditor
+    post:
+        label: 'Giới thiệu'
+        nameFrom: title
+        descriptionFrom: description
+        emptyOption: '--Bài viết giới thiệu--'
+        span: auto
+        type: relation
+    image:
+        label: 'Ảnh preview'
+        mode: image
+        useCaption: true
+        thumbOptions:
+            mode: crop
+            extension: auto
+        span: auto
+        type: fileupload
+    gallery:
+        label: 'Thư viện ảnh'
+        mode: image
+        useCaption: true
+        thumbOptions:
+            mode: crop
+            extension: auto
+        span: auto
+        type: fileupload
+    avaiable:
+        label: 'Khả dụng'
+        span: auto
+        type: switch

@@ -33,7 +33,6 @@ Route::group(['prefix' => 'api'], function () {
                 'first_name' => $userModel->first_name,
                 'last_name' => $userModel->last_name,
                 'email' => $userModel->email,
-                'additional_user' => $userModel->additional_user,
             ];
         }
 

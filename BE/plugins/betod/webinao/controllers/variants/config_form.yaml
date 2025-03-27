@@ -1,0 +1,10 @@
+name: Variants
+form: $/betod/webinao/models/variants/fields.yaml
+modelClass: Betod\Webinao\Models\Variants
+defaultRedirect: betod/webinao/variants
+create:
+    redirect: 'betod/webinao/variants/update/:id'
+    redirectClose: betod/webinao/variants
+update:
+    redirect: betod/webinao/variants
+    redirectClose: betod/webinao/variants

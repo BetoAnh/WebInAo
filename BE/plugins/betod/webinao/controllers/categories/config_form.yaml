@@ -1,0 +1,10 @@
+name: Categories
+form: $/betod/webinao/models/categories/fields.yaml
+modelClass: Betod\Webinao\Models\Categories
+defaultRedirect: betod/webinao/categories
+create:
+    redirect: 'betod/webinao/categories/update/:id'
+    redirectClose: betod/webinao/categories
+update:
+    redirect: betod/webinao/categories
+    redirectClose: betod/webinao/categories

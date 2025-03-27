@@ -16,21 +16,15 @@ const router = createRouter({
       meta: { layout: "default" },
     },
     {
-      path: "/product/:slug",
-      name: "productdetail",
+      path: "/san-pham/:slug",
+      name: "ProductDetailPage",
       component: () => import("../views/ProductDetail.vue"),
       meta: { layout: "default" },
     },
     {
-      path: "/category/:slug1/:slug2?",
-      name: "category",
+      path: "/danh-muc/:parentSlug/:childrenSlug?",
+      name: "CategoryPage",
       component: () => import("../views/CategoryPage.vue"),
-      meta: { layout: "default" },
-    },
-    {
-      path: "/test",
-      name: "test",
-      component: () => import("../views/TestPage.vue"),
       meta: { layout: "default" },
     },
     {
@@ -122,6 +116,12 @@ const router = createRouter({
       name: "profile",
       component: () => import("../views/ProfilePage.vue"),
       meta: { layout: "default" },
+    },
+    {
+      path: "/tu-thiet-ke/:slug",
+      name: "Edit",
+      component: () => import("../views/DesignPage.vue"),
+      meta: { layout: "none" },
     },
   ],
   scrollBehavior(to, from, savedPosition) {

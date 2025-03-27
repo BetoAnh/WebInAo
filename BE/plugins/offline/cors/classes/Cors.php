@@ -22,11 +22,11 @@ class Cors implements HttpKernelInterface
     private $cors;
 
     private $defaultOptions = [
-        'allowedHeaders'      => [],
-        'allowedMethods'      => [],
-        'allowedOrigins'      => [],
-        'exposedHeaders'      => false,
-        'maxAge'              => false,
+        'allowedHeaders' => [],
+        'allowedMethods' => [],
+        'allowedOrigins' => [],
+        'exposedHeaders' => false,
+        'maxAge' => false,
         'supportsCredentials' => false,
     ];
 
@@ -38,7 +38,7 @@ class Cors implements HttpKernelInterface
      */
     public function __construct(HttpKernelInterface $app, array $options = [])
     {
-        $this->app  = $app;
+        $this->app = $app;
         $this->cors = new CorsService(array_merge($this->defaultOptions, $options));
 
     }
@@ -50,9 +50,9 @@ class Cors implements HttpKernelInterface
      *
      * @return bool|Response
      */
-    public function handle(Request $request, $type = HttpKernelInterface::MASTER_REQUEST, $catch = true)
+    public function handle(Request $request, int $type = HttpKernelInterface::MAIN_REQUEST, bool $catch = true): Response
     {
-        if ( ! $this->cors->isCorsRequest($request)) {
+        if (!$this->cors->isCorsRequest($request)) {
             return $this->app->handle($request, $type, $catch);
         }
 
@@ -60,7 +60,7 @@ class Cors implements HttpKernelInterface
             return $this->cors->handlePreflightRequest($request);
         }
 
-        if ( ! $this->cors->isActualRequestAllowed($request)) {
+        if (!$this->cors->isActualRequestAllowed($request)) {
             return new Response('Not allowed.', 403);
         }
 

@@ -1,0 +1,24 @@
+columns:
+    id:
+        label: ID
+        type: number
+        searchable: true
+        sortable: true
+        indent: '1'
+    name:
+        label: 'Tên danh mục'
+        type: text
+        searchable: true
+        sortable: true
+    slug:
+        label: Slug
+        type: text
+        searchable: true
+        sortable: true
+    parent_id:
+        label: 'Danh mục cha'
+        type: text
+        searchable: true
+        sortable: true
+        select: name
+        relation: parent
