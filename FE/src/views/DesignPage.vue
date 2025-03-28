@@ -1,101 +1,102 @@
 <template>
-  <div class="w-full container">
-    <NavDesignComponet />
-    <h2>Trình thiết kế áo</h2>
-
-    <div class="toolbar">
-      <button @click="addShape('rect')">Add Rectangle</button>
-      <button @click="addShape('square')">Add Square</button>
-      <button @click="addShape('circle')">Add Circle</button>
-      <button @click="addShape('triangle')">Add Triangle</button>
-      <button @click="addShape('ellipse')">Add Ellipse</button>
-      <button @click="addText">Add Text</button>
-      <button @click="addImage">Add Image</button>
-      <input type="file" @change="handleFileUpload" accept="image/*" />
-      <button @click="deselectItem">Bỏ chọn</button>
-      <button @click="deleteSelected">Delete Selected</button>
-      <input
-        v-if="selectedType === 'text' && selectedItem"
-        v-model="selectedItem.text"
-        placeholder="Edit text"
-      />
-      <input type="color" v-model="selectedColor" @input="updateColor" />
-      <button @click="moveItemUp" :disabled="!selectedId">Move Up</button>
-      <button @click="moveItemDown" :disabled="!selectedId">Move Down</button>
-      <button @click="moveItemToTop" :disabled="!selectedId">
-        Move To Top
-      </button>
-      <button @click="moveItemToBottom" :disabled="!selectedId">
-        Move To Bottom
-      </button>
-    </div>
-
-    <!-- Khu vực thiết kế áo -->
+  <NavDesignComponet>
     <div class="w-full">
-      <div class="relative w-[400px] flex justify-center">
-        <img :src="image" class="inset-0 -z-10" alt="Áo mẫu" />
-        <div
-          class="absolute bg-transparent top-[52%] translate-y-[-50%] border-dashed border-[1px] border-gray-500 rounded-md"
-        >
-          <v-stage :config="stageSize" ref="stageRef">
-            <v-layer ref="layerRef">
-              <template v-for="(item, i) in items" :key="i">
-                <v-rect
-                  v-if="item.type === 'rect' || item.type === 'square'"
-                  :config="{ ...item, draggable: selectedId === item.id }"
-                  @dragmove="updateShape(i, $event)"
-                  @transformend="updateShape(i, $event)"
-                  @click="() => selectItem(i)"
-                  ref="itemRefs"
-                />
-                <v-circle
-                  v-if="item.type === 'circle'"
-                  :config="{ ...item, draggable: selectedId === item.id }"
-                  @dragmove="updateShape(i, $event)"
-                  @transformend="updateShape(i, $event)"
-                  @click="() => selectItem(i)"
-                  ref="itemRefs"
-                />
-                <v-ellipse
-                  v-if="item.type === 'ellipse'"
-                  :config="{ ...item, draggable: selectedId === item.id }"
-                  @dragmove="updateShape(i, $event)"
-                  @transformend="updateShape(i, $event)"
-                  @click="() => selectItem(i)"
-                  ref="itemRefs"
-                />
-                <v-text
-                  v-if="item.type === 'text'"
-                  :config="{ ...item, draggable: selectedId === item.id }"
-                  @dragmove="updateShape(i, $event)"
-                  @transformend="updateShape(i, $event)"
-                  @click="() => selectItem(i)"
-                  ref="itemRefs"
-                />
-                <v-image
-                  v-if="item.type === 'image'"
-                  :config="{ ...item, draggable: selectedId === item.id }"
-                  @dragmove="updateShape(i, $event)"
-                  @transformend="updateShape(i, $event)"
-                  @click="() => selectItem(i)"
-                  ref="itemRefs"
-                />
-                <v-path
-                  v-if="item.type === 'triangle'"
-                  :config="{ ...item, draggable: selectedId === item.id }"
-                  @dragmove="updateShape(i, $event)"
-                  @transformend="updateShape(i, $event)"
-                  @click="() => selectItem(i)"
-                  ref="itemRefs"
-                />
-              </template>
-              <v-transformer ref="transformerRef" />
-            </v-layer>
-          </v-stage>
+      <h2>Trình thiết kế áo</h2>
+
+      <div class="toolbar">
+        <button @click="addShape('rect')">Add Rectangle</button>
+        <button @click="addShape('square')">Add Square</button>
+        <button @click="addShape('circle')">Add Circle</button>
+        <button @click="addShape('triangle')">Add Triangle</button>
+        <button @click="addShape('ellipse')">Add Ellipse</button>
+        <button @click="addText">Add Text</button>
+        <button @click="addImage">Add Image</button>
+        <input type="file" @change="handleFileUpload" accept="image/*" />
+        <button @click="deselectItem">Bỏ chọn</button>
+        <button @click="deleteSelected">Delete Selected</button>
+        <input
+          v-if="selectedType === 'text' && selectedItem"
+          v-model="selectedItem.text"
+          placeholder="Edit text"
+        />
+        <input type="color" v-model="selectedColor" @input="updateColor" />
+        <button @click="moveItemUp" :disabled="!selectedId">Move Up</button>
+        <button @click="moveItemDown" :disabled="!selectedId">Move Down</button>
+        <button @click="moveItemToTop" :disabled="!selectedId">
+          Move To Top
+        </button>
+        <button @click="moveItemToBottom" :disabled="!selectedId">
+          Move To Bottom
+        </button>
+      </div>
+
+      <!-- Khu vực thiết kế áo -->
+      <div class="w-full">
+        <div class="relative w-[400px] flex justify-center">
+          <img :src="image" class="inset-0 -z-10" alt="Áo mẫu" />
+          <div
+            class="absolute bg-transparent top-[52%] translate-y-[-50%] border-dashed border-[1px] border-gray-500 rounded-md"
+          >
+            <v-stage :config="stageSize" ref="stageRef">
+              <v-layer ref="layerRef">
+                <template v-for="(item, i) in items" :key="i">
+                  <v-rect
+                    v-if="item.type === 'rect' || item.type === 'square'"
+                    :config="{ ...item, draggable: selectedId === item.id }"
+                    @dragmove="updateShape(i, $event)"
+                    @transformend="updateShape(i, $event)"
+                    @click="() => selectItem(i)"
+                    ref="itemRefs"
+                  />
+                  <v-circle
+                    v-if="item.type === 'circle'"
+                    :config="{ ...item, draggable: selectedId === item.id }"
+                    @dragmove="updateShape(i, $event)"
+                    @transformend="updateShape(i, $event)"
+                    @click="() => selectItem(i)"
+                    ref="itemRefs"
+                  />
+                  <v-ellipse
+                    v-if="item.type === 'ellipse'"
+                    :config="{ ...item, draggable: selectedId === item.id }"
+                    @dragmove="updateShape(i, $event)"
+                    @transformend="updateShape(i, $event)"
+                    @click="() => selectItem(i)"
+                    ref="itemRefs"
+                  />
+                  <v-text
+                    v-if="item.type === 'text'"
+                    :config="{ ...item, draggable: selectedId === item.id }"
+                    @dragmove="updateShape(i, $event)"
+                    @transformend="updateShape(i, $event)"
+                    @click="() => selectItem(i)"
+                    ref="itemRefs"
+                  />
+                  <v-image
+                    v-if="item.type === 'image'"
+                    :config="{ ...item, draggable: selectedId === item.id }"
+                    @dragmove="updateShape(i, $event)"
+                    @transformend="updateShape(i, $event)"
+                    @click="() => selectItem(i)"
+                    ref="itemRefs"
+                  />
+                  <v-path
+                    v-if="item.type === 'triangle'"
+                    :config="{ ...item, draggable: selectedId === item.id }"
+                    @dragmove="updateShape(i, $event)"
+                    @transformend="updateShape(i, $event)"
+                    @click="() => selectItem(i)"
+                    ref="itemRefs"
+                  />
+                </template>
+                <v-transformer ref="transformerRef" />
+              </v-layer>
+            </v-stage>
+          </div>
         </div>
       </div>
     </div>
-  </div>
+  </NavDesignComponet>
 </template>
 
 <script setup>

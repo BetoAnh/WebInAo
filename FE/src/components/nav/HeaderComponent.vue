@@ -4,7 +4,11 @@
     <a-flex class="flex-1 justify-between p-5 max-w-[1280px] container">
       <a-flex class="flex justify-center items-center">
         <router-link to="/">
-          <img src="/logo.png" class="w-[300px] min-w-[100px] opacity-95" />
+          <img
+            src="@/assets/logo.png"
+            alt="Logo"
+            class="w-[300px] min-w-[100px] opacity-95"
+          />
         </router-link>
       </a-flex>
       <a-flex
