@@ -1,102 +1,188 @@
 <template>
-  <NavDesignComponet>
-    <div class="w-full">
-      <h2>Trình thiết kế áo</h2>
-
-      <div class="toolbar">
-        <button @click="addShape('rect')">Add Rectangle</button>
-        <button @click="addShape('square')">Add Square</button>
-        <button @click="addShape('circle')">Add Circle</button>
-        <button @click="addShape('triangle')">Add Triangle</button>
-        <button @click="addShape('ellipse')">Add Ellipse</button>
-        <button @click="addText">Add Text</button>
-        <button @click="addImage">Add Image</button>
-        <input type="file" @change="handleFileUpload" accept="image/*" />
-        <button @click="deselectItem">Bỏ chọn</button>
-        <button @click="deleteSelected">Delete Selected</button>
-        <input
-          v-if="selectedType === 'text' && selectedItem"
-          v-model="selectedItem.text"
-          placeholder="Edit text"
-        />
-        <input type="color" v-model="selectedColor" @input="updateColor" />
-        <button @click="moveItemUp" :disabled="!selectedId">Move Up</button>
-        <button @click="moveItemDown" :disabled="!selectedId">Move Down</button>
-        <button @click="moveItemToTop" :disabled="!selectedId">
-          Move To Top
-        </button>
-        <button @click="moveItemToBottom" :disabled="!selectedId">
-          Move To Bottom
-        </button>
-      </div>
-
-      <!-- Khu vực thiết kế áo -->
-      <div class="w-full">
-        <div class="relative w-[400px] flex justify-center">
-          <img :src="image" class="inset-0 -z-10" alt="Áo mẫu" />
-          <div
-            class="absolute bg-transparent top-[52%] translate-y-[-50%] border-dashed border-[1px] border-gray-500 rounded-md"
+  <div>
+    <NavDesignComponet />
+    <div class="relative flex pt-14 mb-14">
+      <div class="w-[420px] bg-[#3F4652] h-screen fixed">
+        <a-tabs
+          v-model:activeKey="activeKey"
+          tab-position="left"
+          @tabScroll="callback"
+          type="card"
+          class="h-screen pb-14"
+          :tabBarStyle="{
+            backgroundColor: '#272C33',
+          }"
+        >
+          <a-tab-pane key="1" class="bg-[#3F4652] h-[500px]">
+            <template #tab>
+              <div class="flex flex-col items-center text-white py-1 w-[40px]">
+                <AkStar class="text-[20px]" /><span
+                  class="text-[10px] font-medium"
+                  >TEMPLATES</span
+                >
+              </div>
+            </template>
+            Content of Tab Pane 1
+          </a-tab-pane>
+          <a-tab-pane key="2" class="bg-[#3F4652] h-[500px]"
+            ><template #tab>
+              <div class="flex flex-col items-center text-white py-1 w-[40px]">
+                <BsBoxFill class="text-[20px]" /><span
+                  class="text-[10px] font-medium"
+                  >SẢN PHẨM</span
+                >
+              </div>
+            </template>
+            Content of Tab Pane 2</a-tab-pane
           >
-            <v-stage :config="stageSize" ref="stageRef">
-              <v-layer ref="layerRef">
-                <template v-for="(item, i) in items" :key="i">
-                  <v-rect
-                    v-if="item.type === 'rect' || item.type === 'square'"
-                    :config="{ ...item, draggable: selectedId === item.id }"
-                    @dragmove="updateShape(i, $event)"
-                    @transformend="updateShape(i, $event)"
-                    @click="() => selectItem(i)"
-                    ref="itemRefs"
-                  />
-                  <v-circle
-                    v-if="item.type === 'circle'"
-                    :config="{ ...item, draggable: selectedId === item.id }"
-                    @dragmove="updateShape(i, $event)"
-                    @transformend="updateShape(i, $event)"
-                    @click="() => selectItem(i)"
-                    ref="itemRefs"
-                  />
-                  <v-ellipse
-                    v-if="item.type === 'ellipse'"
-                    :config="{ ...item, draggable: selectedId === item.id }"
-                    @dragmove="updateShape(i, $event)"
-                    @transformend="updateShape(i, $event)"
-                    @click="() => selectItem(i)"
-                    ref="itemRefs"
-                  />
-                  <v-text
-                    v-if="item.type === 'text'"
-                    :config="{ ...item, draggable: selectedId === item.id }"
-                    @dragmove="updateShape(i, $event)"
-                    @transformend="updateShape(i, $event)"
-                    @click="() => selectItem(i)"
-                    ref="itemRefs"
-                  />
-                  <v-image
-                    v-if="item.type === 'image'"
-                    :config="{ ...item, draggable: selectedId === item.id }"
-                    @dragmove="updateShape(i, $event)"
-                    @transformend="updateShape(i, $event)"
-                    @click="() => selectItem(i)"
-                    ref="itemRefs"
-                  />
-                  <v-path
-                    v-if="item.type === 'triangle'"
-                    :config="{ ...item, draggable: selectedId === item.id }"
-                    @dragmove="updateShape(i, $event)"
-                    @transformend="updateShape(i, $event)"
-                    @click="() => selectItem(i)"
-                    ref="itemRefs"
-                  />
-                </template>
-                <v-transformer ref="transformerRef" />
-              </v-layer>
-            </v-stage>
+          <a-tab-pane key="3" class="bg-[#3F4652] h-[500px]">
+            <template #tab>
+              <div class="flex flex-col items-center text-white py-1 w-[40px]">
+                <AkHeart class="text-[20px]" /><span
+                  class="text-[10px] font-medium"
+                  >CLIPARTS</span
+                >
+              </div> </template
+            >Content of Tab Pane 3</a-tab-pane
+          >
+          <a-tab-pane key="4" class="bg-[#3F4652] h-[500px]">
+            <template #tab>
+              <div class="flex flex-col items-center text-white py-1 w-[40px]">
+                <UiPicture class="text-[20px]" /><span
+                  class="text-[10px] font-medium"
+                  >TẢI HÌNH<br />ẢNH</span
+                >
+              </div> </template
+            ><button @click="addImage">Add Image</button>
+            <input type="file" @change="handleFileUpload" accept="image/*"
+          /></a-tab-pane>
+          <a-tab-pane key="5" class="bg-[#3F4652] h-[500px]">
+            <template #tab>
+              <div class="flex flex-col items-center text-white py-1 w-[40px]">
+                <CoTextSquare class="text-[20px]" /><span
+                  class="text-[10px] font-medium"
+                  >VĂN BẢN</span
+                >
+              </div> </template
+            ><button @click="addText">Add Text</button
+            ><input
+              v-if="selectedType === 'text' && selectedItem"
+              v-model="selectedItem.text"
+              placeholder="Edit text" />
+            <input type="color" v-model="selectedColor" @input="updateColor"
+          /></a-tab-pane>
+          <a-tab-pane key="6" class="bg-[#3F4652] h-[500px]">
+            <template #tab>
+              <div class="flex flex-col items-center text-white py-1 w-[40px]">
+                <LiDiamond class="text-[20px]" /><span
+                  class="text-[10px] font-medium"
+                  >SHAPES</span
+                >
+              </div> </template
+            ><button @click="addShape('rect')">Add Rectangle</button>
+            <button @click="addShape('square')">Add Square</button>
+            <button @click="addShape('circle')">Add Circle</button>
+            <button @click="addShape('triangle')">Add Triangle</button>
+            <button @click="addShape('ellipse')">Add Ellipse</button>
+            <input type="color" v-model="selectedColor" @input="updateColor"
+          /></a-tab-pane>
+          <a-tab-pane key="7" class="bg-[#3F4652] h-[500px]">
+            <template #tab>
+              <div class="flex flex-col items-center text-white py-1 w-[40px]">
+                <IoLayers class="text-[20px]" /><span
+                  class="text-[10px] font-medium"
+                  >LAYERS</span
+                >
+              </div>
+            </template>
+            <button @click="deselectItem">Bỏ chọn</button>
+            <button @click="deleteSelected">Delete Selected</button>
+
+            <button @click="moveItemUp" :disabled="!selectedId">Move Up</button>
+            <button @click="moveItemDown" :disabled="!selectedId">
+              Move Down
+            </button>
+            <button @click="moveItemToTop" :disabled="!selectedId">
+              Move To Top
+            </button>
+            <button @click="moveItemToBottom" :disabled="!selectedId">
+              Move To Bottom
+            </button></a-tab-pane
+          >
+        </a-tabs>
+        <div class="toolbar"></div>
+      </div>
+      <div
+        class="w-full bg-white h-[100vh] ml-[420px] flex justify-center items-center"
+      >
+        <!-- Khu vực thiết kế áo -->
+        <div class="w-full flex justify-center items-center">
+          <div class="relative w-[400px] flex justify-center">
+            <img :src="image" class="inset-0" alt="Áo mẫu" />
+            <div
+              class="absolute bg-transparent top-[52%] translate-y-[-50%] border-dashed border-[1px] border-gray-500 rounded-md"
+            >
+              <v-stage :config="stageSize" ref="stageRef">
+                <v-layer ref="layerRef">
+                  <template v-for="(item, i) in items" :key="i">
+                    <v-rect
+                      v-if="item.type === 'rect' || item.type === 'square'"
+                      :config="{ ...item, draggable: selectedId === item.id }"
+                      @dragmove="updateShape(i, $event)"
+                      @transformend="updateShape(i, $event)"
+                      @click="() => selectItem(i)"
+                      ref="itemRefs"
+                    />
+                    <v-circle
+                      v-if="item.type === 'circle'"
+                      :config="{ ...item, draggable: selectedId === item.id }"
+                      @dragmove="updateShape(i, $event)"
+                      @transformend="updateShape(i, $event)"
+                      @click="() => selectItem(i)"
+                      ref="itemRefs"
+                    />
+                    <v-ellipse
+                      v-if="item.type === 'ellipse'"
+                      :config="{ ...item, draggable: selectedId === item.id }"
+                      @dragmove="updateShape(i, $event)"
+                      @transformend="updateShape(i, $event)"
+                      @click="() => selectItem(i)"
+                      ref="itemRefs"
+                    />
+                    <v-text
+                      v-if="item.type === 'text'"
+                      :config="{ ...item, draggable: selectedId === item.id }"
+                      @dragmove="updateShape(i, $event)"
+                      @transformend="updateShape(i, $event)"
+                      @click="() => selectItem(i)"
+                      ref="itemRefs"
+                    />
+                    <v-image
+                      v-if="item.type === 'image'"
+                      :config="{ ...item, draggable: selectedId === item.id }"
+                      @dragmove="updateShape(i, $event)"
+                      @transformend="updateShape(i, $event)"
+                      @click="() => selectItem(i)"
+                      ref="itemRefs"
+                    />
+                    <v-path
+                      v-if="item.type === 'triangle'"
+                      :config="{ ...item, draggable: selectedId === item.id }"
+                      @dragmove="updateShape(i, $event)"
+                      @transformend="updateShape(i, $event)"
+                      @click="() => selectItem(i)"
+                      ref="itemRefs"
+                    />
+                  </template>
+                  <v-transformer ref="transformerRef" />
+                </v-layer>
+              </v-stage>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </NavDesignComponet>
+  </div>
 </template>
 
 <script setup>
@@ -105,7 +191,20 @@ import NavDesignComponet from "@/components/nav/NavDesignComponet.vue";
 import { onMounted, onBeforeUnmount, ref, reactive, computed } from "vue";
 import { useRoute } from "vue-router";
 import axios from "axios";
-import { CoBrandPinterestP } from "@kalimahapps/vue-icons";
+import {
+  AkStar,
+  BsBoxFill,
+  AkHeart,
+  UiPicture,
+  CoTextSquare,
+  LiDiamond,
+  IoLayers,
+} from "@kalimahapps/vue-icons";
+
+const activeKey = ref(1);
+const callback = (val) => {
+  console.log(val);
+};
 
 const route = useRoute();
 const image = ref(null);
@@ -379,6 +478,17 @@ onMounted(async () => {
 </script>
 
 <style scoped>
+::v-deep(.ant-tabs-card .ant-tabs-tab-active) {
+  background-color: #3f4652 !important;
+  color: white !important;
+  border-radius: 0px !important;
+  border: none !important;
+}
+
+/* Đổi màu chữ khi tab active */
+::v-deep(.ant-tabs-tab-active .ant-tabs-tab-btn) {
+  color: white !important;
+}
 .designer-container {
   text-align: center;
 }

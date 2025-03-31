@@ -5,7 +5,7 @@
       class="flex-1 justify-between pt-[50px] pb-[30px] gap-[24px] border-b-[1px] border-[#DCDFE8]"
     >
       <a-flex class="flex justify-center items-center">
-        <img src="/logo.png" class="w-[300px]" />
+        <img src="@/assets/logo.png" class="w-[300px]" />
       </a-flex>
       <a-flex vertical class="flex-2 justify-end gap-[12px]">
         <!-- Cần UPDATE -->
@@ -39,7 +39,7 @@
     <a-flex class="flex-1 py-[35px] gap-6">
       <a-flex class="flex-1">
         <a-flex vertical gap="16">
-          <h5 class="text-[16px] font-[600]">CÔNG TY TNHH LIVOTEC</h5>
+          <h5 class="text-[16px] font-semibold">CÔNG TY TNHH LIVOTEC</h5>
           <a-flex class="flex gap-[10px]" vertical>
             <ul class="flex flex-col gap-[10px]">
               <li>

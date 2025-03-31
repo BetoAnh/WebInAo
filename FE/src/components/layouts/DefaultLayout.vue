@@ -1,6 +1,6 @@
 <template>
   <!-- eslint-disable vue/no-v-model-argument -->
-  <div>
+  <div class="bg-white">
     <a-flex
       class="justify-center bg-white sticky top-0 z-50 border-b-[1px] border-white"
     >

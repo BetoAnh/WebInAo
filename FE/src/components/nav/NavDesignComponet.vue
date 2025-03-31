@@ -1,7 +1,6 @@
 <template>
-  <div class="w-full relative">
     <div
-      class="w-full bg-[#3FC7BA] flex justify-between items-center fixed select-none"
+      class="w-full bg-[#3FC7BA] flex justify-between items-center fixed select-none z-10"
     >
       <a-flex class="text-white font-bold">
         <a-flex class="justify-center items-center mx-7">
@@ -127,8 +126,6 @@
         @click="closeMenu"
       ></div>
     </div>
-    <slot></slot>
-  </div>
 </template>
 
 <script setup>

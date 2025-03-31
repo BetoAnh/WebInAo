@@ -47,9 +47,7 @@
         </a-badge>
         <!-- <AnOutlinedMenu class="icon iconHidden" @click="showMenu" /> -->
         <MenuComponent v-if="isOpenMenu" @close-menu="showMenu" />
-        <RouterLink
-          to="/san-pham/ao-thun-basic-unisex"
-          class="over:bg-[#02B6AC]h hover:text-white px-3"
+        <RouterLink to="/san-pham/ao-thun-basic-unisex" class="px-3 text-black"
           >TEst</RouterLink
         >
 

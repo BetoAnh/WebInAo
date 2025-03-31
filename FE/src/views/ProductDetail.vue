@@ -1,6 +1,6 @@
 <template>
   <!-- eslint-disable vue/no-v-model-argument -->
-  <section v-if="product" class="w-full flex justify-center">
+  <section v-if="product" class="w-full flex justify-center bg-white">
     <div :key="product.id" class="max-w-[1280px] container p-5">
       <a-flex class="w-full justify-between max-lg:flex-col">
         <a-flex class="w-full flex-1">
@@ -75,10 +75,9 @@
                     :previewMask="false"
                     :preview="false"
                     width="100%"
-                    fallback="/error_img.png"
                     ><template #placeholder>
                       <img
-                        src="/error_img.png"
+                        src="@/assets/error_img.png"
                         alt="Loading..."
                         class="w-full h-full object-cover"
                       />
@@ -150,10 +149,9 @@
                       alt="Product Image"
                       :previewMask="false"
                       :preview="false"
-                      fallback="/error_img.png"
                       ><template #placeholder>
                         <img
-                          src="/error_img.png"
+                          src="@/assets/error_img.png"
                           alt="Loading..."
                           class="w-full h-full object-cover"
                         />
