@@ -1,5 +1,6 @@
 <?php
 use Betod\Webinao\Models\Products as Products;
+use Betod\Webinao\Models\Templates as Templates;
 use Illuminate\Support\Facades\Cache;
 
 Route::group(['prefix' => 'apiProduct'], function () {
@@ -8,7 +9,7 @@ Route::group(['prefix' => 'apiProduct'], function () {
         $cacheDuration = 60;
         $cacheKey = 'product_' . $slug;
         $product = Cache::remember($cacheKey, $cacheDuration, function () use ($slug) {
-            return Products::with(['category.parent', 'category.front_image', 'category.back_image', 'variant', 'post', 'image', 'gallery'])->where('slug', $slug)->first();
+            return Products::with(['category.parent', 'category.front_image', 'category.back_image', 'variant', 'post', 'image', 'gallery', 'front_template', 'back_template'])->where('slug', $slug)->first();
         });
         if (!$product) {
             return response()->json(['message' => 'Product not found'], 404);
@@ -50,6 +51,19 @@ Route::group(['prefix' => 'apiProduct'], function () {
         }
         return response()->json($products);
     });
+});
+Route::group(['prefix' => 'apiImage'], function () {
+    Route::get('/image-proxy/{path}', function ($path) {
+        $fullPath = storage_path('app/uploads/public/' . $path);
 
+        if (!file_exists($fullPath)) {
+            abort(404);
+        }
+
+        return response()->file($fullPath, [
+            'Access-Control-Allow-Origin' => '*',
+            'Content-Type' => mime_content_type($fullPath),
+        ]);
+    })->where('path', '.*');
 });
 

@@ -86,3 +86,21 @@ fields:
         label: 'Khả dụng'
         span: auto
         type: switch
+    front_template:
+        label: 'Mặt in trước'
+        mode: image
+        useCaption: true
+        thumbOptions:
+            mode: crop
+            extension: auto
+        span: auto
+        type: fileupload
+    back_template:
+        label: 'Mặt in sau'
+        mode: image
+        useCaption: true
+        thumbOptions:
+            mode: crop
+            extension: auto
+        span: auto
+        type: fileupload

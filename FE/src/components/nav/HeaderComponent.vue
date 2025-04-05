@@ -56,8 +56,8 @@
             vertical
             v-if="isLogin"
             class="icon iconShow group relative items-center"
-            ><CaUserAvatarFilledAlt class="text-[40px]" /><span
-              class="text-[13px] font-medium mb-2"
+            ><CaUserAvatarFilledAlt class="text-[40px] text-black" /><span
+              class="text-[13px] font-medium mb-2 text-black"
               >Hello, {{ firstName }}</span
             >
 

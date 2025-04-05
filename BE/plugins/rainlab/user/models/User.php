@@ -162,7 +162,7 @@ class User extends Model implements Authenticatable, CanResetPassword
      * @var array hasOne relations
      */
     public $hasOne = [
-        'additional_user' => 'Betod\Livotec\Models\AdditionalUser',
+        'additional_user' => 'Betod\Webinao\Models\Additional_user',
     ];
     /**
      * @var array belongsTo

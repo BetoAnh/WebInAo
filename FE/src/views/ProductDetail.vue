@@ -15,15 +15,16 @@
             <a-flex vertical class="items-end">
               <a-flex
                 class="justify-center items-center text-[30px] text-red-400 font-medium gap-1 flex-1"
-                >{{ formattedPrice }}239.000
-                <span class="font-bold mb-1">₫</span></a-flex
+                >{{ formatCurrency(formattedPrice) }}</a-flex
               >
-              <a-flex class="text-[15px]">239.000 đ / sp</a-flex>
+              <a-flex class="text-[15px] text-black"
+                >{{ formatCurrency(price) }}/sp</a-flex
+              >
             </a-flex>
             <a-flex class="h-full justify-center items-center gap-1"
-              ><span class="text-[15px]">Số lượng:</span
+              ><span class="text-[15px] text-black">Số lượng:</span
               ><a-input-number
-                v-model:value="value1"
+                v-model:value="count"
                 size="large"
                 :min="1"
                 :max="99"
@@ -68,9 +69,13 @@
                 class="flex-1 flex justify-center items-center rounded-md overflow-hidden relative"
               >
                 <a-flex class="relative w-full h-full">
+                  <div
+                    class="absolute z-0 inset-0 opacity-95"
+                    :style="{ backgroundColor: variant.colorValue }"
+                  ></div>
                   <!-- Ảnh chính -->
                   <a-image
-                    :src="activeImage"
+                    :src="activeImage.path"
                     alt="Product Image"
                     :previewMask="false"
                     :preview="false"
@@ -84,9 +89,35 @@
                     </template>
                   </a-image>
                   <div
-                    class="absolute -z-10 inset-0 opacity-95"
-                    :style="{ backgroundColor: variant.colorValue }"
-                  ></div>
+                    v-if="
+                      activeImage.type === 'front' &&
+                      product?.front_template?.path
+                    "
+                    class="absolute z-10 left-[50%] translate-x-[-50%] top-[55%] translate-y-[-50%] flex"
+                  >
+                    <a-image
+                      :src="product?.front_template?.path"
+                      alt="Template Image"
+                      :previewMask="false"
+                      :preview="false"
+                      width="100%"
+                    ></a-image>
+                  </div>
+                  <div
+                    v-if="
+                      activeImage.type === 'back' &&
+                      product?.back_template?.path
+                    "
+                    class="absolute z-10 left-[50%] translate-x-[-50%] top-[55%] translate-y-[-50%] flex"
+                  >
+                    <a-image
+                      :src="product?.back_template?.path"
+                      alt="Template Image"
+                      :previewMask="false"
+                      :preview="false"
+                      width="100%"
+                    ></a-image>
+                  </div>
                 </a-flex>
                 <!-- Mũi tên trái -->
                 <a-button
@@ -131,7 +162,7 @@
                     size="small"
                     class="absolute top-2 left-[50%] translate-x-[-50%] w-10 h-10 rounded-[50%] z-10 bg-white flex justify-center items-center cursor-pointer"
                   >
-                    <AkChevronUp class="text-[18px]" />
+                    <AkChevronUp class="text-[18px] text-black" />
                   </div>
                   <div
                     v-for="(item, index) in visibleImages"
@@ -142,8 +173,13 @@
                       item === activeImage ? 'ring-1 ring-red-400' : '',
                     ]"
                   >
+                    <div
+                      v-if="item.type === 'front' || item.type === 'back'"
+                      class="absolute z-0 inset-0 opacity-95"
+                      :style="{ backgroundColor: variant.colorValue }"
+                    ></div>
                     <a-image
-                      :src="item"
+                      :src="item.path"
                       :width="100"
                       :height="100"
                       alt="Product Image"
@@ -158,9 +194,35 @@
                       </template>
                     </a-image>
                     <div
-                      class="absolute -z-10 inset-0 opacity-95"
-                      :style="{ backgroundColor: variant.colorValue }"
-                    ></div>
+                      v-if="
+                        item.type === 'front' &&
+                        product?.front_template?.path
+                      "
+                      class="absolute z-10 left-[50%] translate-x-[-50%] top-[55%] translate-y-[-50%] flex"
+                    >
+                      <a-image
+                        :src="product?.front_template?.path"
+                        alt="Template Image"
+                        :previewMask="false"
+                        :preview="false"
+                        width="100%"
+                      ></a-image>
+                    </div>
+                    <div
+                      v-if="
+                        item.type === 'back' &&
+                        product?.back_template?.path
+                      "
+                      class="absolute z-10 left-[50%] translate-x-[-50%] top-[55%] translate-y-[-50%] flex"
+                    >
+                      <a-image
+                        :src="product?.back_template?.path"
+                        alt="Template Image"
+                        :previewMask="false"
+                        :preview="false"
+                        width="100%"
+                      ></a-image>
+                    </div>
                   </div>
                   <!-- Nút Xuống -->
                   <div
@@ -170,7 +232,7 @@
                     size="small"
                     class="absolute bottom-2 left-[50%] translate-x-[-50%] w-10 h-10 rounded-[50%] z-10 bg-white flex justify-center items-center cursor-pointer"
                   >
-                    <AkChevronDown class="text-[18px]" />
+                    <AkChevronDown class="text-[18px] text-black" />
                   </div>
                 </div>
               </div>
@@ -178,7 +240,7 @@
           </div>
           <!-- share n description -->
           <div class="flex items-center gap-3 max-lg:justify-center">
-            <span class="font-bold text-[17px]"> Chia sẻ: </span>
+            <span class="font-bold text-black text-[17px]"> Chia sẻ: </span>
             <a-flex class="gap-2"
               ><a href="https://x.com"
                 ><a-flex
@@ -226,7 +288,9 @@
               <!-- color -->
               <a-flex vertical class="my-1">
                 <a-flex
-                  ><strong class="my-2 font-semibold">Màu sắc</strong></a-flex
+                  ><strong class="my-2 font-semibold text-black"
+                    >Màu sắc</strong
+                  ></a-flex
                 >
                 <a-flex>
                   <a-flex class="justify-evenly w-full">
@@ -259,7 +323,11 @@
             ></a-flex>
             <!-- size -->
             <a-flex vertical class="my-1"
-              ><a-flex><strong class="my-2 font-semibold">Size</strong></a-flex>
+              ><a-flex
+                ><strong class="my-2 font-semibold text-black"
+                  >Size</strong
+                ></a-flex
+              >
               <a-flex>
                 <a-flex class="justify-evenly w-full">
                   <a-select
@@ -273,7 +341,9 @@
             <!-- mặt in -->
             <a-flex vertical class="my-1"
               ><a-flex
-                ><strong class="my-2 font-semibold">Mặt in</strong></a-flex
+                ><strong class="my-2 font-semibold text-black"
+                  >Mặt in</strong
+                ></a-flex
               >
               <a-flex>
                 <a-flex class="justify-evenly w-full">
@@ -288,7 +358,9 @@
             <!-- giới tính -->
             <a-flex vertical class="my-1"
               ><a-flex
-                ><strong class="my-2 font-semibold">Giới tính</strong></a-flex
+                ><strong class="my-2 font-semibold text-black"
+                  >Giới tính</strong
+                ></a-flex
               >
               <a-flex>
                 <a-flex class="justify-evenly w-full">
@@ -357,24 +429,58 @@ import {
 } from "@kalimahapps/vue-icons";
 
 const { setBreadcrumb } = inject("breadcrumb");
-const value1 = ref(3);
+const count = ref(1);
 const route = useRoute();
 const product = ref(null);
-const formattedPrice = ref(null);
-const activeImage = ref(null);
+const activeImage = ref([]);
 const activeKey = ref("1");
 const compare = ref(false);
 const currentIndex = ref(0);
 const maxVisible = 5;
 const startIndex = ref(0);
 
+const price = computed(() => {
+  const selectedVariant = product.value?.variant?.find(
+    (item) => item.color === variant.color && item.size === variant.size
+  );
+  if (variant.printed_side == "In 1 mặt")
+    return selectedVariant ? selectedVariant.price : 0;
+  if (variant.printed_side == "In 2 mặt")
+    return selectedVariant ? selectedVariant.price + 50000 : 0;
+});
+
+const formattedPrice = computed(() => {
+  return price.value * count.value;
+});
+
+const formatCurrency = (value) => {
+  return new Intl.NumberFormat("vi-VN", {
+    style: "currency",
+    currency: "VND",
+  }).format(value);
+};
+
 const allImages = computed(() => {
-  let images = product.value?.gallery?.map((img) => img.path) || [];
+  let images = [];
+  if (product.value?.gallery?.length) {
+    images.push(
+      ...product.value.gallery.map((img) => ({
+        type: "gallery",
+        path: img.path,
+      }))
+    );
+  }
   if (product.value?.category?.front_image?.path) {
-    images.push(product.value.category.front_image.path);
+    images.push({
+      type: "front",
+      path: product.value.category.front_image.path,
+    });
   }
   if (product.value?.category?.back_image?.path) {
-    images.push(product.value.category.back_image.path);
+    images.push({
+      type: "back",
+      path: product.value.category.back_image.path,
+    });
   }
   activeImage.value = images[0];
   return images;
@@ -509,18 +615,13 @@ onMounted(async () => {
 const handleAddToCart = async (data) => {
   const currentCart = store.getters["product/getDataStoreCart"] || [];
 
-  let itemExists = false;
-  const updatedCart = currentCart.map((item) => {
-    if (item.id === data.id) {
-      itemExists = true;
-      return { id: item.id, quantity: (item.quantity || 1) + 1 };
-    }
-    return item;
-  });
-
-  if (!itemExists) {
-    updatedCart.push({ id: data.id, quantity: 1 });
-  }
+  const updatedCart = [
+    ...currentCart,
+    {
+      id: data.id,
+      quantity: 1,
+    },
+  ];
 
   store.commit("product/setDataStoreCart", {
     dataStoreCart: updatedCart,

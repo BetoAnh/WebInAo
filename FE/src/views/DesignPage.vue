@@ -1,6 +1,10 @@
 <template>
-  <div>
-    <NavDesignComponet />
+  <div class="select-none">
+    <NavDesignComponet
+      :formattedPrice="formattedPrice"
+      :exportToJson="exportToJson"
+      :saveAsImage="saveAsImage"
+    />
     <div class="relative flex pt-14 mb-14">
       <div class="w-[420px] bg-[#3F4652] h-screen fixed">
         <a-tabs
@@ -8,121 +12,406 @@
           tab-position="left"
           @tabScroll="callback"
           type="card"
-          class="h-screen pb-14"
+          class="h-screen pb-14 pr-6"
           :tabBarStyle="{
             backgroundColor: '#272C33',
           }"
         >
-          <a-tab-pane key="1" class="bg-[#3F4652] h-[500px]">
+          <a-tab-pane :key="2" class="bg-[#3F4652] h-[500px]">
             <template #tab>
               <div class="flex flex-col items-center text-white py-1 w-[40px]">
-                <AkStar class="text-[20px]" /><span
-                  class="text-[10px] font-medium"
-                  >TEMPLATES</span
-                >
+                <BsBoxFill class="text-[20px]" />
+                <span class="text-[10px] font-medium">SẢN PHẨM</span>
               </div>
             </template>
-            Content of Tab Pane 1
+            <div class="py-2">
+              <h1 class="text-[20px] text-white">{{ product.name }}</h1>
+              <div>
+                <span
+                  class="bg-gray-400 text-[18px] p-1 text-white font-semibold rounded-sm"
+                  >{{ formatCurrency(price) }}</span
+                >
+              </div>
+            </div>
+            <a-flex vertical class="border-gray-400 border-t-[1px]">
+              <a-flex vertical class="my-1">
+                <a-flex
+                  ><strong class="my-2 text-white font-semibold"
+                    >Màu sắc</strong
+                  ></a-flex
+                >
+                <a-flex>
+                  <a-flex class="justify-evenly w-full">
+                    <div
+                      v-for="color in availableColors"
+                      :key="color.id"
+                      @click="selectColor(color.value)"
+                    >
+                      <a-popover>
+                        <template #content>
+                          <p class="font-semibold">{{ color.name }}</p>
+                        </template>
+                        <div
+                          class="w-10 h-10 rounded-full transition-all border-2 border-gray-200 hover:shadow-gray-400 hover:border-white hover:shadow-md flex items-center justify-center cursor-pointer"
+                          :style="{
+                            backgroundColor: color.value,
+                            position: 'relative',
+                          }"
+                        >
+                          <AkCheck
+                            v-if="variant.colorValue === color.value"
+                            :class="
+                              variant.colorValue == '#FFFFFF'
+                                ? 'text-black text-2xl'
+                                : 'text-white text-2xl'
+                            "
+                          />
+                        </div>
+                      </a-popover>
+                    </div>
+                  </a-flex>
+                </a-flex>
+              </a-flex>
+            </a-flex>
+            <a-flex vertical class="my-1"
+              ><a-flex
+                ><strong class="my-2 font-semibold text-white"
+                  >Size</strong
+                ></a-flex
+              >
+              <a-flex>
+                <a-flex class="justify-evenly w-full">
+                  <a-select
+                    v-model:value="variant.size"
+                    size="large"
+                    :options="availableSizes"
+                    class="w-full"
+                    placeholder="--Chọn size--"
+                  ></a-select></a-flex></a-flex
+            ></a-flex>
+            <a-flex vertical class="my-1"
+              ><a-flex
+                ><strong class="my-2 font-semibold text-white"
+                  >Mặt in</strong
+                ></a-flex
+              >
+              <a-flex>
+                <a-flex class="justify-evenly w-full">
+                  <a-select
+                    v-model:value="variant.printed_side"
+                    size="large"
+                    :options="printed_side"
+                    class="w-full"
+                    placeholder="--Chọn mặt in--"
+                  ></a-select></a-flex></a-flex
+            ></a-flex>
+            <a-flex class="my-1 mt-5 justify-between"
+              ><a-flex
+                ><strong class="my-2 font-semibold text-white"
+                  >Số lượng:</strong
+                ></a-flex
+              >
+              <a-flex>
+                <a-flex class="justify-evenly w-full">
+                  <a-input-number
+                    id="inputNumber"
+                    v-model:value="count"
+                    :min="1"
+                    :max="10" /></a-flex></a-flex
+            ></a-flex>
+            <a-flex vertical class="my-1"
+              ><a-flex
+                ><strong class="my-2 font-semibold text-white"
+                  >Giới tính</strong
+                ></a-flex
+              >
+              <a-flex>
+                <a-flex class="justify-evenly w-full">
+                  <a-select
+                    v-model:value="variant.sex"
+                    size="large"
+                    :options="sex"
+                    class="w-full"
+                    placeholder="--Chọn giới tính--"
+                  ></a-select></a-flex></a-flex
+            ></a-flex>
           </a-tab-pane>
-          <a-tab-pane key="2" class="bg-[#3F4652] h-[500px]"
-            ><template #tab>
-              <div class="flex flex-col items-center text-white py-1 w-[40px]">
-                <BsBoxFill class="text-[20px]" /><span
-                  class="text-[10px] font-medium"
-                  >SẢN PHẨM</span
-                >
-              </div>
-            </template>
-            Content of Tab Pane 2</a-tab-pane
-          >
-          <a-tab-pane key="3" class="bg-[#3F4652] h-[500px]">
-            <template #tab>
-              <div class="flex flex-col items-center text-white py-1 w-[40px]">
-                <AkHeart class="text-[20px]" /><span
-                  class="text-[10px] font-medium"
-                  >CLIPARTS</span
-                >
-              </div> </template
-            >Content of Tab Pane 3</a-tab-pane
-          >
           <a-tab-pane key="4" class="bg-[#3F4652] h-[500px]">
             <template #tab>
               <div class="flex flex-col items-center text-white py-1 w-[40px]">
-                <UiPicture class="text-[20px]" /><span
-                  class="text-[10px] font-medium"
-                  >TẢI HÌNH<br />ẢNH</span
-                >
-              </div> </template
-            ><button @click="addImage">Add Image</button>
-            <input type="file" @change="handleFileUpload" accept="image/*"
-          /></a-tab-pane>
+                <UiPicture class="text-[20px]" />
+                <span class="text-[10px] font-medium">TẢI HÌNH<br />ẢNH </span>
+              </div>
+            </template>
+            <UploadImageComponent :addClipart="addClipart" />
+            <button @click="addClipart(frontImage)">Thêm ảnh</button>
+          </a-tab-pane>
           <a-tab-pane key="5" class="bg-[#3F4652] h-[500px]">
             <template #tab>
               <div class="flex flex-col items-center text-white py-1 w-[40px]">
-                <CoTextSquare class="text-[20px]" /><span
-                  class="text-[10px] font-medium"
-                  >VĂN BẢN</span
-                >
-              </div> </template
-            ><button @click="addText">Add Text</button
-            ><input
-              v-if="selectedType === 'text' && selectedItem"
-              v-model="selectedItem.text"
-              placeholder="Edit text" />
-            <input type="color" v-model="selectedColor" @input="updateColor"
-          /></a-tab-pane>
+                <CoTextSquare class="text-[20px]" />
+                <span class="text-[10px] font-medium"> VĂN BẢN </span>
+              </div>
+            </template>
+            <button @click="addText">Thêm văn bản</button>
+          </a-tab-pane>
           <a-tab-pane key="6" class="bg-[#3F4652] h-[500px]">
             <template #tab>
               <div class="flex flex-col items-center text-white py-1 w-[40px]">
-                <LiDiamond class="text-[20px]" /><span
-                  class="text-[10px] font-medium"
-                  >SHAPES</span
-                >
-              </div> </template
-            ><button @click="addShape('rect')">Add Rectangle</button>
-            <button @click="addShape('square')">Add Square</button>
-            <button @click="addShape('circle')">Add Circle</button>
-            <button @click="addShape('triangle')">Add Triangle</button>
-            <button @click="addShape('ellipse')">Add Ellipse</button>
-            <input type="color" v-model="selectedColor" @input="updateColor"
-          /></a-tab-pane>
+                <LiDiamond class="text-[20px]" />
+                <span class="text-[10px] font-medium">SHAPES</span>
+              </div>
+            </template>
+            <div class="flex flex-wrap gap-5 py-5">
+              <svg
+                width="70"
+                height="50"
+                class="cursor-pointer"
+                @click="addShape('rect')"
+              >
+                <rect
+                  width="70"
+                  height="50"
+                  fill="gray"
+                  class="hover:fill-[#41C7BA]"
+                />
+              </svg>
+              <svg
+                width="50"
+                height="50"
+                class="cursor-pointer"
+                @click="addShape('square')"
+              >
+                <rect
+                  width="50"
+                  height="50"
+                  fill="gray"
+                  class="hover:fill-[#41C7BA]"
+                />
+              </svg>
+              <svg
+                width="50"
+                height="50"
+                class="cursor-pointer"
+                @click="addShape('circle')"
+              >
+                <circle
+                  cx="25"
+                  cy="25"
+                  r="25"
+                  fill="gray"
+                  class="hover:fill-[#41C7BA]"
+                />
+              </svg>
+              <svg
+                width="50"
+                height="50"
+                class="cursor-pointer"
+                @click="addShape('triangle')"
+              >
+                <polygon
+                  points="25,0 50,50 0,50"
+                  fill="gray"
+                  class="hover:fill-[#41C7BA]"
+                />
+              </svg>
+              <svg
+                width="70"
+                height="50"
+                class="cursor-pointer"
+                @click="addShape('ellipse')"
+              >
+                <ellipse
+                  cx="35"
+                  cy="25"
+                  rx="35"
+                  ry="25"
+                  fill="gray"
+                  class="hover:fill-[#41C7BA]"
+                />
+              </svg>
+            </div>
+          </a-tab-pane>
           <a-tab-pane key="7" class="bg-[#3F4652] h-[500px]">
             <template #tab>
               <div class="flex flex-col items-center text-white py-1 w-[40px]">
-                <IoLayers class="text-[20px]" /><span
-                  class="text-[10px] font-medium"
-                  >LAYERS</span
-                >
+                <IoLayers class="text-[20px]" />
+                <span class="text-[10px] font-medium">LAYERS</span>
               </div>
             </template>
-            <button @click="deselectItem">Bỏ chọn</button>
-            <button @click="deleteSelected">Delete Selected</button>
-
-            <button @click="moveItemUp" :disabled="!selectedId">Move Up</button>
+            <button @click="moveItemUp" :disabled="!selectedId">
+              <BsChevronUp />
+            </button>
             <button @click="moveItemDown" :disabled="!selectedId">
-              Move Down
+              <BsChevronDown />
             </button>
             <button @click="moveItemToTop" :disabled="!selectedId">
-              Move To Top
+              <BsChevronDoubleUp />
             </button>
             <button @click="moveItemToBottom" :disabled="!selectedId">
-              Move To Bottom
-            </button></a-tab-pane
-          >
+              <BsChevronDoubleDown />
+            </button>
+            <div>
+              <a-list
+                item-layout="horizontal"
+                :data-source="items"
+                :bordered="true"
+              >
+                <template #renderItem="{ item, index }">
+                  <a-list-item
+                    @click="selectItem(index)"
+                    :class="{
+                      'bg-gray-500 rounded-md': selectedItem?.id === item.id,
+                    }"
+                  >
+                    <span class="text-white">{{
+                      item.name || `Layer ${item.id + 1}`
+                    }}</span>
+                    <div class="text-white text-[20px] cursor-pointer">
+                      <AkEyeSlashed
+                        v-if="item.visible"
+                        @click="visible(index)"
+                      />
+                      <AkEyeOpen v-else @click="visible(index)" />
+                    </div>
+                    <div
+                      @click="deleteSelected"
+                      class="text-white text-[20px] cursor-pointer"
+                    >
+                      <IoSharpTrashBin class="text-[20px]" />
+                    </div>
+                  </a-list-item>
+                </template>
+              </a-list>
+            </div>
+          </a-tab-pane>
         </a-tabs>
         <div class="toolbar"></div>
       </div>
       <div
-        class="w-full bg-white h-[100vh] ml-[420px] flex justify-center items-center"
+        class="w-full bg-[#EBECED] h-[100vh] ml-[420px] flex justify-center items-center relative"
       >
+        <div
+          v-if="transformerActive"
+          class="absolute bg-white w-full h-[50px] top-0 left-0 flex items-center gap-1 px-2"
+        >
+          <input
+            type="color"
+            class="w-[40px] h-[45px]"
+            v-model="selectedColor"
+            @input="updateColor"
+          />
+          <button @click="deleteSelected">
+            <IoSharpTrashBin class="text-[20px]" />
+          </button>
+          <div
+            v-if="selectedType === 'text' && selectedItem"
+            class="flex items-center gap-2 text-black"
+          >
+            <input
+              v-model="selectedItem.text"
+              placeholder="Edit text"
+              class="text-black border-[2px] rounded-sm h-[40px] border-gray-300 px-2"
+            />
+            <span class="font-semibold text-[17px]">Size:</span>
+            <input
+              type="number"
+              v-model="selectedItem.fontSize"
+              min="10"
+              max="100"
+              class="text-black border-[2px] w-14 rounded-sm h-[40px] border-gray-300 px-2"
+            />
+
+            <span class="font-semibold text-[17px]">Font:</span>
+            <select
+              v-model="selectedItem.fontFamily"
+              class="text-black border-[2px] rounded-sm h-[40px] border-gray-300 px-2"
+            >
+              <option value="Arial">Arial</option>
+              <option value="Times New Roman">Times New Roman</option>
+              <option value="Courier New">Courier New</option>
+              <option value="Verdana">Verdana</option>
+            </select>
+
+            <span class="font-semibold text-[17px]">Lề:</span>
+            <select
+              v-model="selectedItem.align"
+              class="text-black border-[2px] rounded-sm h-[40px] w-18 border-gray-300 px-2"
+            >
+              <option value="left">Left</option>
+              <option value="center">Center</option>
+              <option value="right">Right</option>
+            </select>
+
+            <span class="font-semibold text-[17px]">Gap:</span>
+            <input
+              type="number"
+              v-model="selectedItem.lineHeight"
+              min="0.5"
+              max="3"
+              step="0.1"
+              class="text-black border-[2px] w-14 rounded-sm h-[40px] border-gray-300 px-2"
+            />
+            <button
+              @click="toggleBold"
+              class="border rounded-md w-10"
+              :class="{
+                'font-bold bg-gray-200':
+                  selectedItem.fontStyle.includes('bold'),
+              }"
+            >
+              B
+            </button>
+            <button
+              @click="toggleItalic"
+              class="border rounded-md w-10 italic"
+              :class="{
+                'bg-gray-200': selectedItem.fontStyle.includes('italic'),
+              }"
+            >
+              I
+            </button>
+            <button
+              @click="toggleUnderline"
+              class="rounded-md w-10 underline"
+              :class="{
+                'bg-gray-200': selectedItem.textDecoration === 'underline',
+              }"
+            >
+              U
+            </button>
+            <button
+              @click="toggleLineThrough"
+              class="border rounded-md w-10 line-through"
+              :class="{
+                'bg-gray-200': selectedItem.textDecoration === 'line-through',
+              }"
+            >
+              S
+            </button>
+          </div>
+        </div>
         <!-- Khu vực thiết kế áo -->
         <div class="w-full flex justify-center items-center">
           <div class="relative w-[400px] flex justify-center">
-            <img :src="image" class="inset-0" alt="Áo mẫu" />
             <div
-              class="absolute bg-transparent top-[52%] translate-y-[-50%] border-dashed border-[1px] border-gray-500 rounded-md"
+              class="absolute inset-0 opacity-95 z-0"
+              :style="{ backgroundColor: variant.colorValue }"
+            ></div>
+            <img
+              :src="currentSide === 'front' ? frontImage : backImage"
+              class="inset-0 z-0"
+              alt="Áo mẫu"
+            />
+            <div
+              class="absolute bg-transparent top-[52%] z-10 translate-y-[-50%] border-dashed border-[1px] border-gray-500 rounded-md"
             >
-              <v-stage :config="stageSize" ref="stageRef">
+              <v-stage
+                :config="stageSize"
+                class="w-full h-full"
+                ref="stageRef"
+                @click="handleStageClick"
+              >
                 <v-layer ref="layerRef">
                   <template v-for="(item, i) in items" :key="i">
                     <v-rect
@@ -159,7 +448,10 @@
                     />
                     <v-image
                       v-if="item.type === 'image'"
-                      :config="{ ...item, draggable: selectedId === item.id }"
+                      :config="{
+                        ...item,
+                        draggable: selectedId === item.id,
+                      }"
                       @dragmove="updateShape(i, $event)"
                       @transformend="updateShape(i, $event)"
                       @click="() => selectItem(i)"
@@ -174,51 +466,111 @@
                       ref="itemRefs"
                     />
                   </template>
-                  <v-transformer ref="transformerRef" />
+                  <v-transformer ref="transformerRef" class="z-50" />
                 </v-layer>
               </v-stage>
             </div>
           </div>
         </div>
       </div>
+      <div class="flex justify-center bottom-0 right-0 gap-4 mb-4 fixed">
+        <button @click="toggleSide">
+          Chuyển sang mặt {{ currentSide === "front" ? "sau" : "trước" }}
+        </button>
+      </div>
     </div>
   </div>
 </template>
-
 <script setup>
 import Konva from "konva";
 import NavDesignComponet from "@/components/nav/NavDesignComponet.vue";
-import { onMounted, onBeforeUnmount, ref, reactive, computed } from "vue";
+import { onMounted, ref, reactive, computed } from "vue";
 import { useRoute } from "vue-router";
 import axios from "axios";
 import {
-  AkStar,
   BsBoxFill,
-  AkHeart,
   UiPicture,
   CoTextSquare,
   LiDiamond,
   IoLayers,
+  IoSharpTrashBin,
+  AkEyeOpen,
+  AkEyeSlashed,
+  BsChevronDoubleUp,
+  BsChevronDoubleDown,
+  BsChevronDown,
+  BsChevronUp,
+  AkCheck,
 } from "@kalimahapps/vue-icons";
+import UploadImageComponent from "@/components/UploadImageComponent.vue";
 
-const activeKey = ref(1);
+const activeKey = ref(3);
 const callback = (val) => {
   console.log(val);
 };
 
 const route = useRoute();
-const image = ref(null);
+const frontImage = ref(null);
+const backImage = ref(null);
 const stageRef = ref(null);
 const layerRef = ref(null);
 const product = ref(null);
 
-const stageSize = { width: 200, height: 280 };
-const items = ref([]);
+const currentSide = ref("front"); // 'front' hoặc 'back'
+const itemsFront = ref([]);
+const itemsBack = ref([]);
+
+const stageSize = {
+  width: 200,
+  height: 280,
+};
+
+const items = computed({
+  get() {
+    return currentSide.value === "front" ? itemsFront.value : itemsBack.value;
+  },
+  set(val) {
+    if (currentSide.value === "front") {
+      itemsFront.value = val;
+    } else {
+      itemsBack.value = val;
+    }
+  },
+});
 const selectedId = ref(null);
 const selectedType = ref(null);
 const selectedColor = ref("#000000");
 const itemRefs = ref([]);
 const transformerRef = ref(null);
+const transformerActive = ref(null);
+const count = ref(1);
+
+const toggleSide = () => {
+  selectedId.value = null;
+  transformerRef.value.getNode().nodes([]);
+  currentSide.value = currentSide.value === "front" ? "back" : "front";
+};
+
+const price = computed(() => {
+  const selectedVariant = product.value?.variant?.find(
+    (item) => item.color === variant.color && item.size === variant.size
+  );
+  if (variant.printed_side == "In 1 mặt")
+    return selectedVariant ? selectedVariant.price : 0;
+  if (variant.printed_side == "In 2 mặt")
+    return selectedVariant ? selectedVariant.price + 50000 : 0;
+});
+
+const formattedPrice = computed(() => {
+  return price.value * count.value;
+});
+
+const formatCurrency = (value) => {
+  return new Intl.NumberFormat("vi-VN", {
+    style: "currency",
+    currency: "VND",
+  }).format(value);
+};
 
 const shapeConfigs = {
   rect: { width: 100, height: 80, fill: "#ff0000" },
@@ -228,9 +580,27 @@ const shapeConfigs = {
   triangle: { data: "M 0 100 L 50 0 L 100 100 Z", fill: "#ffa500" },
 };
 
-const deselectItem = () => {
+const saveAsImage = () => {
   selectedId.value = null;
-  transformerRef.value.getNode().nodes([]); // Xóa transformer
+  transformerActive.value = false;
+  transformerRef.value.getNode().nodes([]);
+  const stage = stageRef.value.getStage(); // Lấy đối tượng stage
+  const dataURL = stage.toDataURL({ pixelRatio: 3 }); // Chuyển canvas thành URL ảnh
+
+  // Tạo một liên kết và tải ảnh về
+  const link = document.createElement("a");
+  link.href = dataURL;
+  link.download = "canvas-image.png";
+  link.click();
+};
+
+const handleStageClick = (e) => {
+  if (e.target === e.target.getStage()) {
+    selectedId.value = null;
+    transformerActive.value = false;
+    transformerRef.value.getNode().nodes([]); // Xóa transformer
+    return;
+  }
 };
 
 const addShape = (type) => {
@@ -239,69 +609,116 @@ const addShape = (type) => {
     x: 50,
     y: 50,
     id: `${type}-${Date.now()}`,
+    visible: true,
     ...shapeConfigs[type],
   });
+};
+
+const getCORSImageURL = (url) => {
+  const base = import.meta.env.VITE_APP_URL_API_UPLOAD;
+  if (url.startsWith(base)) {
+    const relativePath = url.replace(base, "");
+    return `${
+      import.meta.env.VITE_APP_URL_API_IMAGE
+    }/image-proxy/${relativePath}`;
+  }
+  return url;
+};
+
+const addClipart = (clipart) => {
+  const img = new window.Image();
+  img.crossOrigin = "anonymous";
+  img.src = getCORSImageURL(clipart);
+  img.onload = () => {
+    items.value.push({
+      id: `Clipart-${Date.now()}`,
+      type: "image",
+      image: img,
+      x: 10,
+      y: 10,
+      width: 180,
+      height: 230,
+      visible: true,
+    });
+  };
+};
+
+const addTemplate = (items, clipart) => {
+  const img = new window.Image();
+  img.crossOrigin = "anonymous";
+  img.src = getCORSImageURL(clipart);
+  img.onload = () => {
+    items.value.push({
+      id: `Clipart-${Date.now()}`,
+      type: "image",
+      image: img,
+      x: 10,
+      y: 10,
+      width: 180,
+      height: 230,
+      visible: true,
+    });
+  };
 };
 
 const addText = () => {
   items.value.push({
     type: "text",
-    x: 100,
-    y: 100,
+    x: 10,
+    y: 10,
     text: "Sample Text",
-    fontSize: 24,
-    fill: "#0000000",
+    fontFamily: "Arial",
+    fontSize: 16,
+    fontStyle: "normal",
+    fontVariant: "normal",
+    textDecoration: "",
+    align: "left",
+    verticalAlign: "top",
+    lineHeight: 1,
+    fill: "#000000",
     id: `text-${Date.now()}`,
+    visible: true,
   });
 };
 
-const handleFileUpload = (event) => {
-  const file = event.target.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = () => {
-      const img = new window.Image();
-      img.src = reader.result;
-      img.onload = () => {
-        items.value.push({
-          type: "image",
-          x: 10,
-          y: 10,
-          image: img,
-          width: stageSize.width * 0.7,
-          height: stageSize.height * 0.7,
-          id: `image-${Date.now()}`,
-        });
-      };
-    };
-    reader.readAsDataURL(file);
+const toggleBold = () => {
+  if (selectedItem.value.fontStyle.includes("bold")) {
+    selectedItem.value.fontStyle =
+      selectedItem.value.fontStyle.replace("bold", "").trim() || "normal";
+  } else {
+    selectedItem.value.fontStyle =
+      selectedItem.value.fontStyle === "normal"
+        ? "bold"
+        : selectedItem.fontStyle + " bold";
   }
 };
 
-const addImage = () => {
-  const img = new window.Image();
-  img.src = "https://placehold.co/600x400/EEE/31343C";
-  img.onload = () => {
-    items.value.push({
-      type: "image",
-      x: 50,
-      y: 50,
-      image: img,
-      width: 100,
-      height: 100,
-      id: `image-${Date.now()}`,
-    });
-  };
+const toggleItalic = () => {
+  if (selectedItem.value.fontStyle.includes("italic")) {
+    selectedItem.value.fontStyle =
+      selectedItem.value.fontStyle.replace("italic", "").trim() || "normal";
+  } else {
+    selectedItem.value.fontStyle =
+      selectedItem.value.fontStyle === "normal"
+        ? "italic"
+        : "italic " + selectedItem.value.fontStyle;
+  }
+};
+
+const toggleUnderline = () => {
+  selectedItem.value.textDecoration =
+    selectedItem.value.textDecoration === "underline" ? "" : "underline";
+};
+
+const toggleLineThrough = () => {
+  selectedItem.value.textDecoration =
+    selectedItem.value.textDecoration === "line-through" ? "" : "line-through";
 };
 
 const updateShape = (index, event) => {
   const node = event.target;
-
-  // Tính toán kích thước mới
   const newWidth = node.width() * node.scaleX();
   const newHeight = node.height() * node.scaleY();
-
-  // Cập nhật lại item
   items.value[index] = {
     ...items.value[index],
     x: node.x(),
@@ -309,12 +726,8 @@ const updateShape = (index, event) => {
     width: newWidth,
     height: newHeight,
   };
-
-  // Đặt lại scale của node để tránh tăng vô hạn
   node.scaleX(1);
   node.scaleY(1);
-
-  // Cập nhật Transformer
   transformerRef.value.getNode().nodes([node]);
 };
 
@@ -322,6 +735,7 @@ const selectItem = (index) => {
   selectedId.value = items.value[index].id;
   selectedType.value = items.value[index].type;
   selectedColor.value = items.value[index].fill || "#000000";
+  transformerActive.value = true;
   transformerRef.value.getNode().nodes([itemRefs.value[index].getNode()]);
 };
 
@@ -340,6 +754,7 @@ const deleteSelected = () => {
   if (selectedId.value) {
     items.value = items.value.filter((item) => item.id !== selectedId.value);
     selectedId.value = null;
+    transformerActive.value = false;
     transformerRef.value.getNode().nodes([]);
   }
 };
@@ -394,6 +809,45 @@ const swapItems = (index1, index2) => {
 const getSelectedItemNode = () => {
   const index = items.value.findIndex((item) => item.id === selectedId.value);
   return index !== -1 ? itemRefs.value[index]?.getNode() : null;
+};
+const visible = (index) => {
+  items.value[index].visible = !items.value[index].visible;
+};
+
+const exportToJson = () => {
+  const stage = stageRef.value.getStage(); // Lấy đối tượng Stage từ ref
+  const shapes = stage.find("Shape"); // Lấy tất cả các shape trên stage
+
+  // Chuyển đổi các shape thành một mảng đối tượng JSON
+  const itemsJson = shapes.map((shape) => {
+    // Lấy đối tượng JSON của shape
+    const shapeJson = shape.toJSON();
+
+    // Chuyển chuỗi JSON thành đối tượng JavaScript (nếu cần thiết)
+    const shapeObject = JSON.parse(shapeJson);
+
+    // Kiểm tra nếu shape là hình ảnh và thêm dữ liệu Base64
+    if (shapeObject.className === "Image") {
+      const imageDataUrl = shape.image().src; // Lấy đường dẫn hình ảnh
+      if (imageDataUrl) {
+        shapeObject.imageData = imageDataUrl; // Thêm chuỗi Base64 vào đối tượng
+      }
+    }
+    return shapeObject;
+  });
+
+  // Tạo file JSON từ mảng itemsJson
+  const jsonBlob = new Blob([JSON.stringify(itemsJson, null, 2)], {
+    type: "application/json",
+  });
+
+  // Tạo link tải file JSON
+  const url = URL.createObjectURL(jsonBlob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "shapes.json"; // Tên file tải về
+  a.click();
+  URL.revokeObjectURL(url); // Giải phóng URL
 };
 
 const sex = ref([
@@ -452,7 +906,7 @@ const availableColors = computed(() => {
   return colors.value.filter((color) => variantColors.has(color.name));
 });
 
-onMounted(async () => {
+const fetchProduct = async () => {
   try {
     const { slug } = route.params;
     const response = await axios.get(
@@ -460,8 +914,14 @@ onMounted(async () => {
     );
     product.value = response.data;
     console.log(product.value);
-    image.value = product.value.category.front_image.path;
-
+    frontImage.value = product.value?.category?.front_image?.path;
+    backImage.value = product.value?.category?.back_image?.path;
+    if (product.value?.front_template?.path) {
+      addTemplate(itemsFront, product.value?.front_template?.path);
+    }
+    if (product.value?.back_template?.path) {
+      addTemplate(itemsBack, product.value?.back_template?.path);
+    }
     if (product.value.variant && product.value.variant.length > 0) {
       const firstVariant = product.value.variant[0];
       variant.colorValue = colors.value.find(
@@ -474,6 +934,10 @@ onMounted(async () => {
   } catch (error) {
     console.error("Không tìm thấy sản phẩm:", error);
   }
+};
+
+onMounted(() => {
+  fetchProduct();
 });
 </script>
 

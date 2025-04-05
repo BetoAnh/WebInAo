@@ -34,7 +34,9 @@ class Products extends Model
      * @var array attachOne
      */
     public $attachOne = [
-        'image' => 'System\Models\File'
+        'image' => 'System\Models\File',
+        'front_template' => 'System\Models\File',
+        'back_template' => 'System\Models\File'
     ];
     /**
      * @var array attachManys
