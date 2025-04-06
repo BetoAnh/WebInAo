@@ -18,3 +18,11 @@ navigation:
                 label: Categories
                 url: betod/webinao/categories
                 icon: icon-sitemap
+            side-menu-item3:
+                label: Orders
+                url: betod/webinao/orders
+                icon: icon-truck
+            side-menu-item4:
+                label: Filters
+                url: betod/webinao/filters
+                icon: icon-filter

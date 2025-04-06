@@ -27,4 +27,39 @@ v1.0.9:
 v1.0.10:
     - 'Updated table betod_webinao_additional_user'
     - builder_table_update_betod_webinao_additional_user.php
-
+v1.0.11:
+    - 'Created table betod_webinao_orders'
+    - builder_table_create_betod_webinao_orders.php
+v1.0.12:
+    - 'Updated table betod_webinao_orders'
+    - builder_table_update_betod_webinao_orders.php
+v1.0.13:
+    - 'Created table betod_webinao_order_positions'
+    - builder_table_create_betod_webinao_order_positions.php
+v1.0.14:
+    - 'Updated table betod_webinao_products'
+    - builder_table_update_betod_webinao_products_5.php
+v1.0.15:
+    - 'Updated table betod_webinao_orders'
+    - builder_table_update_betod_webinao_orders_2.php
+v1.0.16:
+    - 'Updated table betod_webinao_categories'
+    - builder_table_update_betod_webinao_categories.php
+v1.0.17:
+    - 'Updated table betod_webinao_additional_user'
+    - builder_table_update_betod_webinao_additional_user_2.php
+v1.0.18:
+    - 'Updated table betod_webinao_order_positions'
+    - builder_table_update_betod_webinao_order_positions.php
+v1.0.19:
+    - 'Updated table betod_webinao_products'
+    - builder_table_update_betod_webinao_products_6.php
+v1.0.20:
+    - 'Updated table betod_webinao_variants'
+    - builder_table_update_betod_webinao_variants.php
+v1.0.21:
+    - 'Created table betod_webinao_filters'
+    - builder_table_create_betod_webinao_filters.php
+v1.0.22:
+    - 'Updated table betod_webinao_filters'
+    - builder_table_update_betod_webinao_filters.php

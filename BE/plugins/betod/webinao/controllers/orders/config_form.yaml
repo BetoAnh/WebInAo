@@ -1,0 +1,10 @@
+name: Orders
+form: $/betod/webinao/models/orders/fields.yaml
+modelClass: Betod\Webinao\Models\Orders
+defaultRedirect: betod/webinao/orders
+create:
+    redirect: 'betod/webinao/orders/update/:id'
+    redirectClose: betod/webinao/orders
+update:
+    redirect: betod/webinao/orders
+    redirectClose: betod/webinao/orders

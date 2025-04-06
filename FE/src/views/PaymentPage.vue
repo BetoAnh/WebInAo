@@ -1,172 +1,62 @@
 <template>
   <!-- eslint-disable vue/no-v-model-argument -->
-  <div class="w-full mb-[3rem]">
-    <div class="w-full border-b-[1px] border-gray-300 py-3">
-      <span class="text-[#38B6AC] font-bold">Thanh toán</span>
-    </div>
-    <div>
-      <h1 class="text-3xl text-[#38B6AC] font-bold my-3">Thanh toán</h1>
-      <div class="w-full">
-        <div class="text-[14px] font-medium">
-          Have a coupon?
-          <a class="text-blue-500 font-medium">Click here to enter your code</a>
-        </div>
-        <a-form
-          ref="formRef"
-          :model="formState"
-          :rules="rules"
-          layout="vertical"
-        >
-          <a-flex class="w-full gap-10 content">
-            <a-flex vertical class="flex-wrap w-full flex-1">
-              <h3 class="text-xl font-medium">Billing details</h3>
-              <a-form-item ref="name" name="name" class="w-full">
-                <template #label>
-                  <span class="text-base">Họ và tên</span>
-                </template>
-                <a-input
-                  v-model:value="formState.name"
-                  placeholder="Nhập họ và tên"
-                />
-              </a-form-item>
-              <a-flex class="w-full gap-8">
-                <a-form-item ref="phone" name="phone" class="w-full">
+  <div class="w-full flex justify-center bg-white">
+    <div class="max-w-[1280px] container p-5">
+      <div v-if="dataTable.length > 0">
+        <h1 class="text-3xl text-[#38B6AC] font-bold mb-5">Thanh toán</h1>
+        <div class="w-full">
+          <a-form
+            ref="formRef"
+            :model="formState"
+            :rules="rules"
+            layout="vertical"
+          >
+            <a-flex class="w-full gap-10 content">
+              <a-flex vertical class="flex-wrap w-full flex-1">
+                <h3 class="text-xl font-medium">Billing details</h3>
+                <a-form-item ref="name" name="name" class="w-full">
                   <template #label>
-                    <span class="text-base">Phone</span>
+                    <span class="text-base">Họ và tên</span>
                   </template>
                   <a-input
-                    v-model:value="formState.phone"
-                    placeholder="Nhập số điện thoại"
+                    v-model:value="formState.name"
+                    placeholder="Nhập họ và tên"
                   />
                 </a-form-item>
-                <a-form-item ref="email" name="email" class="w-full">
-                  <template #label>
-                    <span class="text-base">Email address</span>
-                  </template>
-                  <a-input
-                    v-model:value="formState.email"
-                    placeholder="Nhập địa chỉ email"
-                  />
-                </a-form-item>
-              </a-flex>
-              <a-flex class="w-full gap-8">
-                <a-form-item name="province" class="w-full">
-                  <template #label>
-                    <span class="text-base whitespace-nowrap"
-                      >Tỉnh/Thành phố</span
-                    >
-                  </template>
-                  <a-select
-                    v-model:value="LocateState.province"
-                    @change="onProvinceChange"
-                    placeholder="Chọn Tỉnh/Thành phố"
-                  >
-                    <a-select-option
-                      v-for="province in provinces"
-                      :key="province.code"
-                      :value="province.code"
-                    >
-                      {{ province.name }}
-                    </a-select-option>
-                  </a-select>
-                </a-form-item>
-                <a-form-item name="district" class="w-full">
-                  <template #label>
-                    <span class="text-base">Quận/Huyện</span>
-                  </template>
-                  <a-select
-                    v-model:value="LocateState.district"
-                    @change="onDistrictChange"
-                    placeholder="Chọn Quận/Huyện"
-                  >
-                    <a-select-option
-                      v-for="district in districts"
-                      :key="district.code"
-                      :value="district.code"
-                    >
-                      {{ district.name }}
-                    </a-select-option>
-                  </a-select>
-                </a-form-item>
-              </a-flex>
-              <a-flex class="w-full gap-8">
-                <a-form-item name="subdistrict" class="w-full">
-                  <template #label>
-                    <span class="text-base whitespace-nowrap"
-                      >Xã/Phường/Thị trấn</span
-                    >
-                  </template>
-                  <a-select
-                    v-model:value="LocateState.subdistrict"
-                    placeholder="Chọn Xã/Phường/Thị trấn"
-                  >
-                    <a-select-option
-                      v-for="ward in wards"
-                      :key="ward.code"
-                      :value="ward.code"
-                    >
-                      {{ ward.name }}
-                    </a-select-option>
-                  </a-select>
-                </a-form-item>
-                <a-form-item ref="address" name="address" class="w-full">
-                  <template #label>
-                    <span class="text-base whitespace-nowrap"
-                      >Street address</span
-                    >
-                  </template>
-                  <a-input
-                    v-model:value="formState.address"
-                    placeholder="Nhập địa chỉ cụ thể"
-                  />
-                </a-form-item>
-              </a-flex>
-            </a-flex>
-            <a-flex vertical class="w-full flex-1">
-              <h3>
-                <a-checkbox v-model:checked="formState.differentaddresschecked">
-                  <span class="text-xl font-medium flex gap-2 text-center"
-                    >Ship to a different address?</span
-                  >
-                </a-checkbox>
-              </h3>
-              <a-flex v-if="formState.differentaddresschecked" vertical>
                 <a-flex class="w-full gap-8">
-                  <a-form-item ref="diffname" name="diffname" class="w-full">
+                  <a-form-item ref="phone" name="phone" class="w-full">
                     <template #label>
-                      <span class="text-base">Tên đầy đủ của người nhận</span>
+                      <span class="text-base">Phone</span>
                     </template>
                     <a-input
-                      v-model:value="formState.diffname"
-                      placeholder="Nhập họ và tên"
+                      v-model:value="formState.phone"
+                      placeholder="Nhập số điện thoại"
                     />
                   </a-form-item>
-                  <a-form-item ref="diffphone" name="diffphone" class="w-full">
+                  <a-form-item ref="email" name="email" class="w-full">
                     <template #label>
-                      <span class="text-base"
-                        >Số điện thoại người nhận (optional)</span
-                      >
+                      <span class="text-base">Email address</span>
                     </template>
                     <a-input
-                      v-model:value="formState.diffphone"
-                      placeholder="Nhập số điện thoại"
+                      v-model:value="formState.email"
+                      placeholder="Nhập địa chỉ email"
                     />
                   </a-form-item>
                 </a-flex>
                 <a-flex class="w-full gap-8">
-                  <a-form-item name="diffprovince" class="w-full">
+                  <a-form-item name="province" class="w-full">
                     <template #label>
                       <span class="text-base whitespace-nowrap"
                         >Tỉnh/Thành phố</span
                       >
                     </template>
                     <a-select
-                      v-model:value="LocateState.diffprovince"
+                      v-model:value="LocateState.province"
                       @change="onProvinceChange"
                       placeholder="Chọn Tỉnh/Thành phố"
                     >
                       <a-select-option
-                        v-for="province in diffprovinces"
+                        v-for="province in provinces"
                         :key="province.code"
                         :value="province.code"
                       >
@@ -174,17 +64,17 @@
                       </a-select-option>
                     </a-select>
                   </a-form-item>
-                  <a-form-item name="diffdistrict" class="w-full">
+                  <a-form-item name="district" class="w-full">
                     <template #label>
                       <span class="text-base">Quận/Huyện</span>
                     </template>
                     <a-select
-                      v-model:value="LocateState.diffdistrict"
+                      v-model:value="LocateState.district"
                       @change="onDistrictChange"
                       placeholder="Chọn Quận/Huyện"
                     >
                       <a-select-option
-                        v-for="district in diffdistricts"
+                        v-for="district in districts"
                         :key="district.code"
                         :value="district.code"
                       >
@@ -194,18 +84,18 @@
                   </a-form-item>
                 </a-flex>
                 <a-flex class="w-full gap-8">
-                  <a-form-item name="diffsubdistrict" class="w-full">
+                  <a-form-item name="subdistrict" class="w-full">
                     <template #label>
                       <span class="text-base whitespace-nowrap"
                         >Xã/Phường/Thị trấn</span
                       >
                     </template>
                     <a-select
-                      v-model:value="LocateState.diffsubdistrict"
+                      v-model:value="LocateState.subdistrict"
                       placeholder="Chọn Xã/Phường/Thị trấn"
                     >
                       <a-select-option
-                        v-for="ward in diffwards"
+                        v-for="ward in wards"
                         :key="ward.code"
                         :value="ward.code"
                       >
@@ -213,164 +103,279 @@
                       </a-select-option>
                     </a-select>
                   </a-form-item>
-                  <a-form-item
-                    ref="diffaddress"
-                    name="diffaddress"
-                    class="w-full"
-                  >
+                  <a-form-item ref="address" name="address" class="w-full">
                     <template #label>
                       <span class="text-base whitespace-nowrap"
                         >Street address</span
                       >
                     </template>
                     <a-input
-                      v-model:value="formState.diffaddress"
+                      v-model:value="formState.address"
                       placeholder="Nhập địa chỉ cụ thể"
                     />
                   </a-form-item>
                 </a-flex>
               </a-flex>
-              <a-form-item name="notes">
-                <template #label>
-                  <span class="text-base">Order notes (optional)</span>
-                </template>
-                <a-textarea
-                  v-model:value="formState.notes"
-                  placeholder="Notes about your order, e.g. special notes for delivery."
-                />
-              </a-form-item>
-            </a-flex>
-          </a-flex>
-          <h3 class="text-black text-xl font-medium my-[20px]">Your order</h3>
-          <a-flex class="w-full mb-[20px]"
-            ><a-table
-              :columns="columns"
-              :data-source="dataTable"
-              :pagination="false"
-              bordered
-              class="w-full"
-            >
-              <template #bodyCell="{ column, record }">
-                <template v-if="column.key === 'name'">
-                  <a-flex gap="5" class="items-center">
-                    <a class="a-product" :href="`/product/${record.slug}`">{{
-                      record.name
-                    }}</a
-                    ><AkXSmall />
-                    <span class="font-bold">{{ record.quantity }}</span>
+              <a-flex vertical class="w-full flex-1">
+                <h3>
+                  <a-checkbox
+                    v-model:checked="formState.differentaddresschecked"
+                  >
+                    <span class="text-xl font-medium flex gap-2 text-center"
+                      >Ship to a different address?</span
+                    >
+                  </a-checkbox>
+                </h3>
+                <a-flex v-if="formState.differentaddresschecked" vertical>
+                  <a-flex class="w-full gap-8">
+                    <a-form-item ref="diffname" name="diffname" class="w-full">
+                      <template #label>
+                        <span class="text-base">Tên đầy đủ của người nhận</span>
+                      </template>
+                      <a-input
+                        v-model:value="formState.diffname"
+                        placeholder="Nhập họ và tên"
+                      />
+                    </a-form-item>
+                    <a-form-item
+                      ref="diffphone"
+                      name="diffphone"
+                      class="w-full"
+                    >
+                      <template #label>
+                        <span class="text-base"
+                          >Số điện thoại người nhận (optional)</span
+                        >
+                      </template>
+                      <a-input
+                        v-model:value="formState.diffphone"
+                        placeholder="Nhập số điện thoại"
+                      />
+                    </a-form-item>
                   </a-flex>
-                </template>
-                <template v-else-if="column.key === 'subtotal'">
-                  <span class="text-[#02B6AC] text-[16px] font-bold">{{
-                    formatCurrency(record.price * record.quantity)
-                  }}</span>
-                </template>
-              </template>
-              <template #summary>
-                <a-table-summary-row>
-                  <a-table-summary-cell
-                    ><span class="font-semibold"
-                      >Subtotal</span
-                    ></a-table-summary-cell
-                  >
-                  <a-table-summary-cell>
-                    <span class="text-[#02B6AC] text-[16px] font-bold">{{
-                      formatCurrency(totals.subtotal)
-                    }}</span>
-                  </a-table-summary-cell>
-                </a-table-summary-row>
-                <a-table-summary-row>
-                  <a-table-summary-cell
-                    ><span class="font-semibold"
-                      >Shipping</span
-                    ></a-table-summary-cell
-                  >
-                  <a-table-summary-cell>
-                    <span class="font-semibold">Free shipping</span>
-                  </a-table-summary-cell>
-                </a-table-summary-row>
-                <a-table-summary-row>
-                  <a-table-summary-cell
-                    ><span class="font-semibold"
-                      >Total</span
-                    ></a-table-summary-cell
-                  >
-                  <a-table-summary-cell>
-                    <span class="text-[#02B6AC] text-[16px] font-bold">{{
-                      formatCurrency(totals.subtotal)
-                    }}</span>
-                  </a-table-summary-cell>
-                </a-table-summary-row>
-              </template>
-            </a-table>
-          </a-flex>
-          <a-flex vertical class="w-full bg-[#E9E6ED] rounded-md">
-            <a-form-item name="paymenttype" :rules="rules.paymenttype">
-              <a-flex class="w-full p-[1em] border-b-[1px] border-[#cfc8d8]">
-                <a-radio-group
-                  v-model:value="formState.paymenttype"
-                  class="flex flex-1 flex-col"
-                >
-                  <a-radio :style="radioStyle" :value="1"
-                    >Chuyển khoản ngân hàng</a-radio
-                  >
-                  <a-card
-                    v-if="formState.paymenttype === 1"
-                    class="bg-[#DCD7E3] w-full"
-                  >
-                    <p>
-                      Thực hiện thanh toán vào ngay tài khoản ngân hàng của
-                      chúng tôi. Vui lòng sử dụng Mã đơn hàng của bạn trong phần
-                      Nội dung thanh toán. Đơn hàng sẽ đươc giao sau khi tiền đã
-                      chuyển.
-                    </p>
-                  </a-card>
-                  <a-radio :style="radioStyle" :value="2"
-                    >Trả tiền mặt khi nhận hàng</a-radio
-                  >
-                  <a-card
-                    v-if="formState.paymenttype === 2"
-                    class="bg-[#DCD7E3] w-full"
-                  >
-                    <p>Trả tiền mặt khi giao hàng</p>
-                  </a-card>
-                </a-radio-group>
-              </a-flex>
-            </a-form-item>
-            <a-flex vertical class="w-full p-[1em]">
-              <a-form-item
-                ><p>
-                  Dữ liệu cá nhân của bạn sẽ được sử dụng để xử lý đơn đặt hàng,
-                  hỗ trợ trải nghiệm của bạn trên trang web này và cho các mục
-                  đích khác được mô tả trong phần của chúng tôi.<a
-                    class="text-blue-500"
-                    >privacy policy.</a
-                  >
-                </p>
-              </a-form-item>
-              <a-form-item name="terms" :rules="rules.terms">
-                <a-checkbox v-model:checked="formState.terms">
-                  I have read and agree to the website
-                  <a class="text-blue-500">terms and conditions</a>
-                  <span class="text-red-500">*</span>
-                </a-checkbox>
-              </a-form-item>
-              <a-flex class="justify-end">
-                <a-button
-                  type="primary"
-                  @click="onSubmit"
-                  v-if="!PayPalButtonRef"
-                  >Place order</a-button
-                >
-                <PayPalButton
-                  v-if="PayPalButtonRef"
-                  :amount="totals.subtotal"
-                  @payment-success="handlePaymentSuccess"
-                />
+                  <a-flex class="w-full gap-8">
+                    <a-form-item name="diffprovince" class="w-full">
+                      <template #label>
+                        <span class="text-base whitespace-nowrap"
+                          >Tỉnh/Thành phố</span
+                        >
+                      </template>
+                      <a-select
+                        v-model:value="LocateState.diffprovince"
+                        @change="onProvinceChange"
+                        placeholder="Chọn Tỉnh/Thành phố"
+                      >
+                        <a-select-option
+                          v-for="province in diffprovinces"
+                          :key="province.code"
+                          :value="province.code"
+                        >
+                          {{ province.name }}
+                        </a-select-option>
+                      </a-select>
+                    </a-form-item>
+                    <a-form-item name="diffdistrict" class="w-full">
+                      <template #label>
+                        <span class="text-base">Quận/Huyện</span>
+                      </template>
+                      <a-select
+                        v-model:value="LocateState.diffdistrict"
+                        @change="onDistrictChange"
+                        placeholder="Chọn Quận/Huyện"
+                      >
+                        <a-select-option
+                          v-for="district in diffdistricts"
+                          :key="district.code"
+                          :value="district.code"
+                        >
+                          {{ district.name }}
+                        </a-select-option>
+                      </a-select>
+                    </a-form-item>
+                  </a-flex>
+                  <a-flex class="w-full gap-8">
+                    <a-form-item name="diffsubdistrict" class="w-full">
+                      <template #label>
+                        <span class="text-base whitespace-nowrap"
+                          >Xã/Phường/Thị trấn</span
+                        >
+                      </template>
+                      <a-select
+                        v-model:value="LocateState.diffsubdistrict"
+                        placeholder="Chọn Xã/Phường/Thị trấn"
+                      >
+                        <a-select-option
+                          v-for="ward in diffwards"
+                          :key="ward.code"
+                          :value="ward.code"
+                        >
+                          {{ ward.name }}
+                        </a-select-option>
+                      </a-select>
+                    </a-form-item>
+                    <a-form-item
+                      ref="diffaddress"
+                      name="diffaddress"
+                      class="w-full"
+                    >
+                      <template #label>
+                        <span class="text-base whitespace-nowrap"
+                          >Street address</span
+                        >
+                      </template>
+                      <a-input
+                        v-model:value="formState.diffaddress"
+                        placeholder="Nhập địa chỉ cụ thể"
+                      />
+                    </a-form-item>
+                  </a-flex>
+                </a-flex>
+                <a-form-item name="notes">
+                  <template #label>
+                    <span class="text-base">Order notes (optional)</span>
+                  </template>
+                  <a-textarea
+                    v-model:value="formState.notes"
+                    placeholder="Notes about your order, e.g. special notes for delivery."
+                  />
+                </a-form-item>
               </a-flex>
             </a-flex>
-          </a-flex>
-        </a-form>
+            <h3 class="text-black text-xl font-medium my-[20px]">Your order</h3>
+            <a-flex class="w-full mb-[20px]"
+              ><a-table
+                :columns="columns"
+                :data-source="dataTable"
+                :pagination="false"
+                bordered
+                class="w-full"
+              >
+                <template #bodyCell="{ column, record }">
+                  <template v-if="column.key === 'name'">
+                    <a-flex gap="5" class="items-center">
+                      <a
+                        class="a-product"
+                        :href="`/san-pham/${record.product.slug}`"
+                        >{{ record.product.name }}</a
+                      ><AkXSmall />
+                      <span class="font-bold">{{ record.quantity }}</span>
+                    </a-flex>
+                  </template>
+                  <template v-else-if="column.key === 'subtotal'">
+                    <span class="text-[#02B6AC] text-[16px] font-bold">{{
+                      formatCurrency(record.price * record.quantity)
+                    }}</span>
+                  </template>
+                </template>
+                <template #summary>
+                  <a-table-summary-row>
+                    <a-table-summary-cell
+                      ><span class="font-semibold"
+                        >Subtotal</span
+                      ></a-table-summary-cell
+                    >
+                    <a-table-summary-cell>
+                      <span class="text-[#02B6AC] text-[16px] font-bold">{{
+                        formatCurrency(totals.subtotal)
+                      }}</span>
+                    </a-table-summary-cell>
+                  </a-table-summary-row>
+                  <a-table-summary-row>
+                    <a-table-summary-cell
+                      ><span class="font-semibold"
+                        >Shipping</span
+                      ></a-table-summary-cell
+                    >
+                    <a-table-summary-cell>
+                      <span class="font-semibold">Free shipping</span>
+                    </a-table-summary-cell>
+                  </a-table-summary-row>
+                  <a-table-summary-row>
+                    <a-table-summary-cell
+                      ><span class="font-semibold"
+                        >Total</span
+                      ></a-table-summary-cell
+                    >
+                    <a-table-summary-cell>
+                      <span class="text-[#02B6AC] text-[16px] font-bold">{{
+                        formatCurrency(totals.subtotal)
+                      }}</span>
+                    </a-table-summary-cell>
+                  </a-table-summary-row>
+                </template>
+              </a-table>
+            </a-flex>
+            <a-flex vertical class="w-full bg-[#E9E6ED] rounded-md">
+              <a-form-item name="paymenttype" :rules="rules.paymenttype">
+                <a-flex class="w-full p-[1em] border-b-[1px] border-[#cfc8d8]">
+                  <a-radio-group
+                    v-model:value="formState.paymenttype"
+                    class="flex flex-1 flex-col"
+                  >
+                    <a-radio :style="radioStyle" :value="1"
+                      >Chuyển khoản ngân hàng</a-radio
+                    >
+                    <a-card
+                      v-if="formState.paymenttype === 1"
+                      class="bg-[#DCD7E3] w-full"
+                    >
+                      <p>
+                        Thực hiện thanh toán vào ngay tài khoản ngân hàng của
+                        chúng tôi. Vui lòng sử dụng Mã đơn hàng của bạn trong
+                        phần Nội dung thanh toán. Đơn hàng sẽ đươc giao sau khi
+                        tiền đã chuyển.
+                      </p>
+                    </a-card>
+                    <a-radio :style="radioStyle" :value="2"
+                      >Trả tiền mặt khi nhận hàng</a-radio
+                    >
+                    <a-card
+                      v-if="formState.paymenttype === 2"
+                      class="bg-[#DCD7E3] w-full"
+                    >
+                      <p>Trả tiền mặt khi giao hàng</p>
+                    </a-card>
+                  </a-radio-group>
+                </a-flex>
+              </a-form-item>
+              <a-flex vertical class="w-full p-[1em]">
+                <a-form-item
+                  ><p>
+                    Dữ liệu cá nhân của bạn sẽ được sử dụng để xử lý đơn đặt
+                    hàng, hỗ trợ trải nghiệm của bạn trên trang web này và cho
+                    các mục đích khác được mô tả trong phần của chúng tôi.<a
+                      class="text-blue-500"
+                      >privacy policy.</a
+                    >
+                  </p>
+                </a-form-item>
+                <a-form-item name="terms" :rules="rules.terms">
+                  <a-checkbox v-model:checked="formState.terms">
+                    I have read and agree to the website
+                    <a class="text-blue-500">terms and conditions</a>
+                    <span class="text-red-500">*</span>
+                  </a-checkbox>
+                </a-form-item>
+                <a-flex class="justify-end">
+                  <a-button
+                    type="primary"
+                    @click="onSubmit"
+                    v-if="!PayPalButtonRef"
+                    >Place order</a-button
+                  >
+                  <PayPalButton
+                    v-if="PayPalButtonRef"
+                    :amount="totals.subtotal"
+                    @payment-success="handlePaymentSuccess"
+                  />
+                </a-flex>
+              </a-flex>
+            </a-flex>
+          </a-form>
+        </div>
+      </div>
+      <div v-else class="text-red-500 font-semibold">
+        Giỏ hàng của bạn đang trống!
       </div>
     </div>
   </div>
@@ -378,14 +383,14 @@
 </template>
 
 <script setup>
-import { computed, onMounted, reactive, ref, watch } from "vue";
+import { computed, onMounted, reactive, ref, watch, inject } from "vue";
 import axios from "axios";
 import { AkXSmall } from "@kalimahapps/vue-icons";
-import store from "@/store/store";
 import PayPalButton from "@/components/paypal/PayPalButton.vue";
 import { useRouter } from "vue-router";
-import { getDataFromIndexedDB } from "@/store/indexedDB";
 import { Modal } from "ant-design-vue";
+const { setBreadcrumb } = inject("breadcrumb");
+import { getCartItems, clearCart } from "@/store/cartDB";
 
 const router = useRouter();
 const PayPalButtonRef = ref(false);
@@ -426,26 +431,18 @@ const LocateState = reactive({
 
 const fetchDataTable = async () => {
   try {
-    const dataStore = JSON.parse(
-      JSON.stringify(store.getters["product/getDataStoreCart"])
-    );
-    const dataProduct = await getDataFromIndexedDB("products");
+    const cartItems = await getCartItems();
+    dataTable.value = cartItems || [];
+    console.log(dataTable.value);
 
-    const dataCart = dataProduct.filter((item) =>
-      dataStore.some((cartItem) => cartItem.id === item.id)
-    );
-    if (dataCart && dataCart.length > 0) {
-      dataTable.value = dataCart.map((item) => {
-        const cartItem = dataStore.find((cart) => cart.id === item.id);
-        return { ...item, quantity: cartItem ? cartItem.quantity : 1 };
-      });
-
-      formState.items = dataTable.value.map((item) => ({
-        product_id: item.id,
-        quantity: item.quantity,
-        price: item.price,
-      }));
-    }
+    formState.items = dataTable.value.map((item) => ({
+      product_id: item.product?.id,
+      variant: item.variant,
+      frontImage: item.frontImage,
+      backImage: item.backImage,
+      quantity: item.quantity,
+      price: item.price,
+    }));
   } catch (e) {
     console.log("Error: ", e);
   }
@@ -772,12 +769,15 @@ const onSubmit = async () => {
     }
     if (formState.paymenttype == 2) {
       PayPalButtonRef.value = false;
+
       const response = await axios.post(
         `${import.meta.env.VITE_APP_URL_API_ORDER}/createOrder`,
         formState
       );
-      store.dispatch("product/clearDataStoreCart");
-      alert("Order created successfully");
+      await clearCart();
+      Modal.success({
+        title: "Thanh toán đơn hàng thành công!",
+      });
       router.push(`/payment/order-received/${response.data.order_code}`);
     }
   } catch (error) {
@@ -798,8 +798,7 @@ const handlePaymentSuccess = async (orderID) => {
       `${import.meta.env.VITE_APP_URL_API_ORDER}/createOrder`,
       JSON.parse(JSON.stringify(formState))
     );
-
-    store.dispatch("product/clearDataStoreCart");
+    await clearCart();
     Modal.success({
       title: "Thanh toán đơn hàng thành công!",
     });
@@ -810,6 +809,13 @@ const handlePaymentSuccess = async (orderID) => {
 };
 
 onMounted(() => {
+  const breadcrumbItems = [
+    {
+      name: "Thanh toán",
+      url: "/payment",
+    },
+  ];
+  setBreadcrumb(breadcrumbItems);
   fetchProvinces();
   fetchDataTable();
   checkUser();

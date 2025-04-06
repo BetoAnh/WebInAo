@@ -1,9 +1,7 @@
 <template>
-    <div class="w-full mb-[3rem]">
-      <div class="w-full border-b-[1px] border-gray-300 py-3">
-        <span class="text-[#38B6AC] font-bold">Thanh toán</span>
-      </div>
-      <div>
+  <div class="w-full flex justify-center bg-white">
+    <div class="max-w-[1280px] container p-5">
+      <div class="text-black">
         <h1 class="text-3xl text-[#38B6AC] font-bold my-3">Thanh toán</h1>
         <p class="font-medium">Thank you. Your order has been received.</p>
         <div v-if="IsorderCode" class="flex flex-col gap-4">
@@ -134,6 +132,7 @@
         </div>
       </div>
     </div>
+  </div>
 </template>
 
 <script setup>

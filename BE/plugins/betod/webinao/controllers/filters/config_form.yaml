@@ -1,0 +1,10 @@
+name: Filters
+form: $/betod/webinao/models/filters/fields.yaml
+modelClass: Betod\Webinao\Models\Filters
+defaultRedirect: betod/webinao/filters
+create:
+    redirect: 'betod/webinao/filters/update/:id'
+    redirectClose: betod/webinao/filters
+update:
+    redirect: betod/webinao/filters
+    redirectClose: betod/webinao/filters

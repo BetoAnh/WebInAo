@@ -30,7 +30,7 @@
                 :max="99"
             /></a-flex>
           </a-flex>
-          <a-flex class="relative mx-5">
+          <a-flex v-if="product.avaiable == 1" class="relative mx-5">
             <a-flex class="w-full justify-center items-center gap-5">
               <a-button
                 class="flex-1 bg-[#FE4344] flex justify-center items-center p-6 opacity-80 rounded-md hover:opacity-100 cursor-pointer"
@@ -38,27 +38,9 @@
               >
                 <span class="text-white text-[20px] font-medium">Đặt hàng</span>
               </a-button>
-              <a-button
-                class="flex-1 bg-[#38B6AC] flex justify-center items-center p-6 rounded-md opacity-80 hover:opacity-100 cursor-pointer"
-                @click="addToComparison(product)"
-              >
-                <span class="text-white text-[20px] font-medium">So Sánh</span>
-              </a-button>
             </a-flex>
-            <div
-              v-if="compare"
-              class="bg-[#f0fffb] absolute z-30 top-[44px] mt-[5px] pb-[5px] rounded-[5px] right-0 border-[#ededed] border-[1px] flex flex-col w-[calc(50%-10px)] items-center"
-            >
-              <span class="font-medium"> Thêm so sánh thành công </span>
-              <a
-                href="/compareProducts"
-                class="hover:bg-[#f0fffb] text-[#4bc4a3] text-[14px] leading-[16px]"
-              >
-                Xem so sánh sản phẩm
-              </a>
-            </div>
-          </a-flex></a-flex
-        >
+          </a-flex>
+        </a-flex>
       </a-flex>
       <div class="w-full flex flex-wrap gap-2 max-lg:flex-col">
         <div class="flex-1 flex flex-col">
@@ -75,7 +57,7 @@
                   ></div>
                   <!-- Ảnh chính -->
                   <a-image
-                    :src="activeImage.path"
+                    :src="activeImage?.path"
                     alt="Product Image"
                     :previewMask="false"
                     :preview="false"
@@ -90,7 +72,7 @@
                   </a-image>
                   <div
                     v-if="
-                      activeImage.type === 'front' &&
+                      activeImage?.type === 'front' &&
                       product?.front_template?.path
                     "
                     class="absolute z-10 left-[50%] translate-x-[-50%] top-[55%] translate-y-[-50%] flex"
@@ -105,7 +87,7 @@
                   </div>
                   <div
                     v-if="
-                      activeImage.type === 'back' &&
+                      activeImage?.type === 'back' &&
                       product?.back_template?.path
                     "
                     class="absolute z-10 left-[50%] translate-x-[-50%] top-[55%] translate-y-[-50%] flex"
@@ -195,8 +177,7 @@
                     </a-image>
                     <div
                       v-if="
-                        item.type === 'front' &&
-                        product?.front_template?.path
+                        item.type === 'front' && product?.front_template?.path
                       "
                       class="absolute z-10 left-[50%] translate-x-[-50%] top-[55%] translate-y-[-50%] flex"
                     >
@@ -210,8 +191,7 @@
                     </div>
                     <div
                       v-if="
-                        item.type === 'back' &&
-                        product?.back_template?.path
+                        item.type === 'back' && product?.back_template?.path
                       "
                       class="absolute z-10 left-[50%] translate-x-[-50%] top-[55%] translate-y-[-50%] flex"
                     >
@@ -273,6 +253,7 @@
         <div class="w-1/3 max-lg:w-full flex gap-2 flex-col">
           <a-flex vertical class="mx-5"
             ><a-flex
+              v-if="product.avaiable == 1"
               class="p-5 border-y-[1px] border-gray-200 justify-center items-center my-3"
             >
               <RouterLink
@@ -297,7 +278,7 @@
                     <div
                       v-for="color in availableColors"
                       :key="color.id"
-                      @click="selectColor(color.value)"
+                      @click="selectColor(color)"
                     >
                       <a-popover>
                         <template #content>
@@ -406,15 +387,13 @@
   <a-flex class="w-full justify-center items-center h-[100px]" v-else
     ><a-spin
   /></a-flex>
-  <!-- eslint-disable vue/no-v-model-argument -->
 </template>
 
 <script setup>
-import { onMounted, ref, inject, reactive, computed } from "vue";
+import { onMounted, ref, inject, reactive, computed, toRaw } from "vue";
 import { useRoute } from "vue-router";
 import ProductSpecifications from "@/components/ProductSpecifications.vue";
 import ProductPosts from "@/components/ProductPosts.vue";
-import store from "@/store/store";
 import axios from "axios";
 import {
   CoBrandPinterestP,
@@ -427,14 +406,14 @@ import {
   AkChevronUp,
   AkChevronDown,
 } from "@kalimahapps/vue-icons";
-
+import { addToCart } from "@/store/cartDB";
 const { setBreadcrumb } = inject("breadcrumb");
+const { fetchCartCount } = inject("countCart");
 const count = ref(1);
 const route = useRoute();
 const product = ref(null);
 const activeImage = ref([]);
 const activeKey = ref("1");
-const compare = ref(false);
 const currentIndex = ref(0);
 const maxVisible = 5;
 const startIndex = ref(0);
@@ -561,10 +540,10 @@ const variant = reactive({
   sex: sex.value.find((item) => item.id == 1).value,
 });
 
-const selectColor = (value) => {
-  variant.colorValue = value;
+const selectColor = (color) => {
+  variant.colorValue = color.value;
+  variant.color = color.name;
 };
-
 const availableSizes = computed(() => {
   if (!product.value.variant || product.value.variant.length === 0) return []; // Kiểm tra nếu variants chưa có dữ liệu
   const variantSizes = new Set(product.value.variant.map((v) => v.size));
@@ -584,6 +563,8 @@ onMounted(async () => {
       `${import.meta.env.VITE_APP_URL_API_PRODUCT}/product/${slug}`
     );
     product.value = response.data;
+    console.log(product.value);
+
     if (product.value.variant && product.value.variant.length > 0) {
       const firstVariant = product.value.variant[0];
       variant.colorValue = colors.value.find(
@@ -592,16 +573,10 @@ onMounted(async () => {
       variant.size = firstVariant.size;
       variant.color = firstVariant.color;
     }
-    console.log(variant);
-
     const breadcrumbItems = [
       {
-        name: product.value.category?.parent?.name,
-        url: `/danh-muc/${product.value.category?.parent?.slug}`,
-      },
-      {
         name: product.value.category?.name,
-        url: `/danh-muc/${product.value.category?.parent?.slug}/${product.value.category?.slug}`,
+        url: `/danh-muc/${product.value.category?.slug}`,
       },
       { name: product.value.name, url: `/san-pham/${product.value.slug}` },
     ];
@@ -612,52 +587,75 @@ onMounted(async () => {
   }
 });
 
-const handleAddToCart = async (data) => {
-  const currentCart = store.getters["product/getDataStoreCart"] || [];
+const getCORSImageURL = (url) => {
+  if (!url) {
+    return null;
+  }
+  const base = import.meta.env.VITE_APP_URL_API_UPLOAD;
+  if (url.startsWith(base)) {
+    const relativePath = url.replace(base, "");
+    return `${
+      import.meta.env.VITE_APP_URL_API_IMAGE
+    }/image-proxy/${relativePath}`;
+  }
+  return url;
+};
 
-  const updatedCart = [
-    ...currentCart,
-    {
-      id: data.id,
-      quantity: 1,
-    },
-  ];
-
-  store.commit("product/setDataStoreCart", {
-    dataStoreCart: updatedCart,
+const urlToBase64 = (url) => {
+  if (!url) return null;
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.crossOrigin = "Anonymous";
+    img.onload = () => {
+      const scale = 0.3;
+      const canvas = document.createElement("canvas");
+      canvas.width = img.width * scale;
+      canvas.height = img.height * scale;
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      const dataURL = canvas.toDataURL("image/png");
+      resolve(dataURL);
+    };
+    img.onerror = (error) => {
+      reject(error);
+    };
+    img.src = url;
   });
 };
 
-const addToComparison = (product) => {
-  if (!product || !product.id) {
-    alert("Thêm thất bại: Sản phẩm không hợp lệ");
-    return;
-  }
-
-  const currentProducts = store.getters["product/getDataStoreProducts"] ?? [];
-
-  const differentProduct = currentProducts.find(
-    (item) => item.category?.name !== product.category?.name
+const handleAddToCart = async () => {
+  const frontImageURL = getCORSImageURL(
+    toRaw(product.value?.front_template?.path)
   );
-
-  if (differentProduct) {
-    alert("Sản phẩm bạn chọn không cùng chuyên mục");
-    return;
+  const backImageURL = getCORSImageURL(
+    toRaw(product.value?.back_template?.path)
+  );
+  let frontImageBase64 = null;
+  let backImageBase64 = null;
+  try {
+    frontImageBase64 = await urlToBase64(frontImageURL);
+    backImageBase64 = await urlToBase64(backImageURL);
+  } catch (error) {
+    console.error("Không thể chuyển đổi hình ảnh thành Base64:", error);
   }
-
-  const existProduct = currentProducts.some((item) => item.id === product.id);
-  if (existProduct) {
-    alert("Sản phẩm đã tồn tại trong danh sách so sánh");
-    compare.value = true;
-    return;
-  }
-
-  const updatedProducts = [...currentProducts, product];
-  store.commit("product/setDataStoreProducts", {
-    dataStoreProducts: updatedProducts,
-  });
-
-  compare.value = true;
+  const cartItem = {
+    product: {
+      id: product.value.id,
+      name: product.value.name,
+      slug: product.value.slug,
+      frontImage: product.value?.category?.front_image?.path,
+      backImage: product.value?.category?.back_image?.path,
+    },
+    variant: toRaw(variant),
+    frontImage: frontImageBase64,
+    backImage: backImageBase64,
+    quantity: toRaw(count.value),
+    price: toRaw(price.value),
+    createdAt: Date.now(),
+  };
+  await addToCart(cartItem);
+  console.log("Thêm thiết kế vào giỏ thành công!");
+  fetchCartCount();
 };
 </script>
 

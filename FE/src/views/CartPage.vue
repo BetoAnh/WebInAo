@@ -1,167 +1,197 @@
 <template>
-  <!-- eslint-disable vue/no-v-model-argument -->
-  <div class="w-full flex flex-1 flex-col">
-    <div class="w-full border-b-[1px] border-gray-300 py-3 mb-4">
-      <span class="text-[#38B6AC] font-bold">Giỏ hàng</span>
-    </div>
-    <div class="w-full flex items-center">
-      <h1 class="text-[#38B6AC] font-bold text-3xl">Giỏ hàng</h1>
-    </div>
-    <div class="product-comparison p-[10px] overflow-x-auto" v-if="haveData">
-      <table>
-        <thead>
-          <tr>
-            <th>&nbsp;</th>
-            <th>&nbsp;</th>
-            <th>Product</th>
-            <th>Price</th>
-            <th>Quantity</th>
-            <th>Subtotal</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(item, index) in specs" :key="index">
-            <td>
-              <a-flex class="items-center">
-                <button
-                  class="text-center text-2xl text-red-500 rounded-full p-[2px] hover:text-white hover:bg-red-500"
-                  @click="deleteItem(item.id)"
-                >
-                  <CgClose class="text-[18px]" />
-                </button>
-              </a-flex>
-            </td>
-            <!-- <td>{{ item.img }}</td> -->
-            <td>
-              <a-flex class="">
-                <img
-                  src="https://livotec.com/wp-content/uploads/2024/11/Bep-tu-don-Livotec-E-smart-LIS-646-1-300x300.png"
-                  class="w-[32px]"
-                />
-              </a-flex>
-            </td>
-            <td>
-              <router-link
-                :to="`/product/${item.slug}`"
-                class="hover:bg-white text-[#0d6efd] capitalize"
-              >
-                {{ item.name }}
-              </router-link>
-            </td>
-            <td>
-              <span class="text-[16px] text-[#02b6ac] font-bold">
-                {{ formatPrice(item.price) }}
-              </span>
-            </td>
-            <td>
-              <a-input-number
-                v-model:value="item.quantity"
-                @change="handleChangeQuantity()"
-                :min="0"
-                :max="item.stock"
-                class="border-[#666] hover:border-[#666] rounded-none w-[60px] text-center"
-              />
-            </td>
-            <td>
-              <span class="text-[16px] text-[#02b6ac] font-bold">
-                {{ formatPrice(item.price * item.quantity) }}
-              </span>
-            </td>
-          </tr>
-          <tr>
-            <td class="text-right" colspan="6">
-              <div class="float-left">
-                <input
-                  placeholder="Coupon code"
-                  class="border-[1px] border-black mr-1 px-[6px] py-[5px] w-[80px]"
-                />
-                <button
-                  class="text-nowrap rounded-[3px] font-bold text-[#515151] p-[6px] bg-[#e9e6ed]"
-                >
-                  Apply coupon
-                </button>
-              </div>
-              <a-button
-                :class="[
-                  'rounded-[3px] flex float-right h-[100%] p-[6px] bg-[#e9e6ed] text-[#515151]',
-                  changeQuantity ? '' : 'buttonUpdateCart',
-                ]"
-                @click="handleUpdateCart()"
-                :disabled="changeQuantity"
-              >
-                <span class="font-bold"> Update cart </span>
-              </a-button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <div
-        class="bg-[#3fb696] p-4 text-white text-center flex-1 cursor-pointer mt-[50px]"
-        @click="handlePayment"
-      >
-        <span class="text-lg font-bold">Proceed to checkout</span>
+  <div class="w-full flex justify-center bg-white">
+    <div class="max-w-[1280px] container p-5">
+      <div class="text-black">
+        <h1 class="font-bold text-2xl">Chi tiết đơn hàng</h1>
       </div>
-    </div>
-    <a-flex v-else vertical class="my-[20px]" gap="3">
-      <span class="font-semibold">Your cart is currently empty.</span>
-      <p>
-        <button
-          @click="handleHome"
-          class="justify-start flex bg-[#DCD7E3] px-4 py-[0.618em] rounded-[3px] font-bold text-[#515151]"
+      <div class="w-full overflow-x-auto" v-if="haveData">
+        <div class="flex w-full gap-16">
+          <div class="flex-1">
+            <div
+              v-for="item in cartItems"
+              :key="item.id"
+              class="w-full border-b-[1px] border-gray-300"
+            >
+              <div class="flex justify-between w-full">
+                <div class="flex">
+                  <div
+                    class="relative w-[150px] cursor-pointer m-5"
+                    @click="item.showBack = !item.showBack"
+                  >
+                    <div
+                      v-if="item.showBack"
+                      :style="{ backgroundColor: item.variant.colorValue }"
+                    >
+                      <img
+                        :src="item.product.backImage"
+                        class="w-[150px] h-[150px] object-cover z-30"
+                      />
+                      <img
+                        :src="item.backImage"
+                        class="w-[75px] object-cover absolute top-[53%] left-[50%] translate-x-[-50%] translate-y-[-50%]"
+                      />
+                    </div>
+                    <div
+                      v-else
+                      :style="{ backgroundColor: item.variant.colorValue }"
+                    >
+                      <img
+                        :src="item.product.frontImage"
+                        class="w-[150px] h-[150px] object-cover z-30"
+                      />
+                      <img
+                        :src="item.frontImage"
+                        class="w-[75px] object-cover absolute top-[53%] left-[50%] translate-x-[-50%] translate-y-[-50%]"
+                      />
+                    </div>
+                  </div>
+                  <div class="flex flex-col justify-between py-2">
+                    <RouterLink :to="`/san-pham/${item.product.slug}`"
+                      ><h2 class="text-black font-semibold text-lg">
+                        {{ item.product.name }}
+                      </h2></RouterLink
+                    >
+                    <div>
+                      <p>
+                        <span class="text-gray-500">Số mặt in: </span>
+                        <span class="text-black">2</span>
+                      </p>
+                      <p>
+                        <span class="text-gray-500">Màu sắc: </span>
+                        <span class="text-black">{{ item.variant.color }}</span>
+                      </p>
+                      <p>
+                        <span class="text-gray-500">Kích thước: </span>
+                        <span class="text-black">{{ item.variant.size }}</span>
+                      </p>
+                      <p>
+                        <span class="text-gray-500">Mặt in: </span>
+                        <span class="text-black">{{
+                          item.variant.printed_side
+                        }}</span>
+                      </p>
+                      <p>
+                        <span class="text-gray-500">Giới tính: </span>
+                        <span class="text-black">{{ item.variant.sex }}</span>
+                      </p>
+                    </div>
+                    <div>
+                      <span class="text-[#4E54CA] font-semibold text-xl">{{
+                        formatPrice(item.price * item.quantity)
+                      }}</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="gap-3 flex flex-col justify-center">
+                  <div class="flex flex-col gap-1">
+                    <strong class="text-black">Số lượng</strong>
+                    <a-input-number
+                      id="inputNumber"
+                      v-model:value="item.quantity"
+                      :min="1"
+                      :max="100"
+                      size="large"
+                      @change="handleChangeQuantity(toRaw(item))"
+                    />
+                  </div>
+                  <div>
+                    <button @click="deleteItem(item.id)">
+                      <span
+                        class="flex gap-1 justify-center items-center text-[15px] text-red-500"
+                        ><FlDelete class="text-[20px]" />Xóa</span
+                      >
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div></div>
+          </div>
+          <div class="w-[350px] shadow-lg rounded-lg bg-white">
+            <div class="mx-10 border-b-[1px] border-gray-300 py-7">
+              <div class="flex justify-center items-center p-5">
+                <h2 class="text-black font-semibold text-lg">Thành tiền</h2>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-black text-[15px] font-medium"
+                  >Tổng tiền:</span
+                ><span class="text-black text-[15px] font-medium">{{
+                  formatPrice(totalPrice)
+                }}</span>
+              </div>
+            </div>
+            <div
+              class="mx-10 border-b-[1px] border-gray-300 py-5 flex justify-center items-center"
+            >
+              <span class="text-black text-xl font-semibold">{{
+                formatPrice(totalPrice)
+              }}</span>
+            </div>
+            <div
+              class="bg-[#3fb696] p-4 text-white text-center flex-1 cursor-pointer m-10 rounded-md"
+              @click="handlePayment"
+            >
+              <span class="text-lg font-bold">Proceed to checkout</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <a-flex v-else vertical class="my-[20px]" gap="3">
+        <span class="font-semibold text-black"
+          >Your cart is currently empty.</span
         >
-          Return to shop
-        </button>
-      </p>
-    </a-flex>
+        <p>
+          <button
+            @click="handleHome"
+            class="justify-start flex bg-[#DCD7E3] px-4 py-[0.618em] rounded-[3px] font-bold text-[#515151]"
+          >
+            Return to shop
+          </button>
+        </p>
+      </a-flex>
+    </div>
   </div>
 </template>
 
 <script setup>
-import DefaultLayout from "../components/layouts/DefaultLayout.vue";
-import { ref, onMounted, watch } from "vue";
-import store from "@/store/store";
-import { CgClose } from "@kalimahapps/vue-icons";
-import { routeLocationKey, useRouter } from "vue-router";
-import {
-  deleteItemFromIndexedDB,
-  getDataFromIndexedDB,
-} from "@/store/indexedDB";
-
+import { ref, onMounted, inject, toRaw, computed } from "vue";
+import { useRouter } from "vue-router";
+import { getCartItems, removeCartItem, updateCartItem } from "@/store/cartDB";
+import { FlDelete } from "@kalimahapps/vue-icons";
+import { notification } from "ant-design-vue";
+const { setBreadcrumb } = inject("breadcrumb");
+const { fetchCartCount } = inject("countCart");
 const router = useRouter();
-const specs = ref([]);
+const cartItems = ref([]);
 const haveData = ref(false);
-const changeQuantity = ref(true);
+
+const totalPrice = computed(() => {
+  return cartItems.value.reduce((total, item) => {
+    return total + item.price * item.quantity;
+  }, 0);
+});
 
 onMounted(() => {
   fetchData();
+  const breadcrumbItems = [
+    {
+      name: "Giỏ hàng",
+      url: "/cart",
+    },
+  ];
+  setBreadcrumb(breadcrumbItems);
 });
 
 const fetchData = async () => {
-  const dataStore = JSON.parse(
-    JSON.stringify(store.getters["product/getDataStoreCart"])
-  );
-  const dataProduct = await getDataFromIndexedDB("products");
-
-  const dataCart = dataProduct.filter((item) =>
-    dataStore.some((cartItem) => cartItem.id === item.id)
-  );
-  if (dataCart && dataCart.length > 0) {
-    specs.value = dataCart.map((item) => {
-      const cartItem = dataStore.find((cart) => cart.id === item.id);
-      return { ...item, quantity: cartItem ? cartItem.quantity : 1 };
-    });
+  const items = await getCartItems();
+  if (items.length > 0) {
+    cartItems.value = items;
     haveData.value = true;
   } else {
     haveData.value = false;
   }
+  fetchCartCount();
 };
-watch(
-  () => store.getters["product/getDataStoreCart"],
-  (newVal, oldVal) => {
-    fetchData();
-  },
-  { deep: true }
-);
 
 const formatPrice = (value) => {
   return new Intl.NumberFormat("vi-VN", {
@@ -170,87 +200,29 @@ const formatPrice = (value) => {
   }).format(value);
 };
 
+const handleChangeQuantity = async (item) => {
+  if (item.quantity !== 0 && item.quantity !== null) {
+    await updateCartItem(item.id, item);
+    fetchData(); // Làm mới giỏ hàng sau khi cập nhật số lượng
+    notification.success({
+      message: `Cập nhật giỏ hàng thành công`,
+      placement: "bottomLeft",
+    });
+  }
+};
+
 const deleteItem = async (itemId) => {
-  await deleteItemFromIndexedDB("cart", itemId);
-
-  let updatedCart = store.getters["product/getDataStoreCart"].filter(
-    (item) => item.id !== itemId
-  );
-
-  store.commit("product/setDataStoreCart", { dataStoreCart: updatedCart });
-
-  await fetchData();
+  await removeCartItem(itemId);
+  fetchData(); // Làm mới giỏ hàng sau khi xóa món hàng
 };
 
 const handlePayment = () => {
   router.push("/payment");
 };
 
-const handleUpdateCart = () => {
-  store.commit("product/setDataStoreCart", {
-    dataStoreCart: specs.value,
-  });
-  changeQuantity.value = true;
-  const dataWithNoQuantity = specs.value.filter((item) => item.quantity === 0);
-
-  if (dataWithNoQuantity && dataWithNoQuantity.length > 0) {
-    if (
-      confirm(
-        "Bạn chắc chắn muốn xóa các sản phẩm không mong muốn khỏi giỏ hảng?"
-      )
-    ) {
-      dataWithNoQuantity.forEach((item) => {
-        deleteItem(item.id);
-      });
-    } else {
-      return;
-    }
-  }
-};
-
-const handleChangeQuantity = () => {
-  changeQuantity.value = false;
-};
-
 const handleHome = () => {
-  router.push("/");
+  router.push("/"); // Trở về trang chủ
 };
 </script>
 
-<style scoped>
-table {
-  width: 100%;
-  border: 1px solid #e5e5e5;
-}
-
-table thead th {
-  text-align: start;
-  border-bottom: 1px solid #e5e5e5;
-  font-weight: 700;
-  line-height: 1.5rem;
-}
-table th,
-table td {
-  min-width: 30px;
-  padding: 0 10px;
-}
-
-table th {
-  padding-block: 12px;
-}
-table tr td {
-  padding-block: 12px;
-  border-bottom: 1px solid #e5e5e5;
-}
-table tbody tr td {
-  margin-inline: 10px;
-}
-
-.buttonUpdateCart:hover {
-  background-color: #dcd7e3;
-  text-decoration: none;
-  background-image: none;
-  color: #515151;
-  border: 1px solid #d9d9d9;
-}
-</style>
+<style scoped></style>

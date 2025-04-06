@@ -2,7 +2,7 @@ import { ref } from "vue";
 
 const breadcrumbItems = ref([]);
 
-export const useBreadcrumb = () => {  // ✅ Sửa thành export const
+export const useBreadcrumb = () => {
   const setBreadcrumb = (items) => {
     breadcrumbItems.value = items;
   };

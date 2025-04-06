@@ -40,7 +40,7 @@ import { useRoute } from "vue-router";
 const route = useRoute();
 const openChat = ref(false);
 
-const excludedRoutes = ["/", "/login"];
+const excludedRoutes = ["/", "/login", "/profile"];
 const showBreadcrumb = computed(() => !excludedRoutes.includes(route.path));
 
 const hanldeOpenChatBot = () => {

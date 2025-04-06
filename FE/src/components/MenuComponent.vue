@@ -9,8 +9,8 @@
   >
     <template #title>
       <a-flex class="justify-between flex-1 items-center">
-        <span class="text-[18px] font-bold">MENU</span>
-        <ClCloseLg @click="closeMenu" class="cursor-pointer" />
+        <span class="text-[18px] font-bold text-black">MENU</span>
+        <ClCloseLg @click="closeMenu" class="cursor-pointer text-black" />
       </a-flex>
     </template>
     <a-flex> Content </a-flex>

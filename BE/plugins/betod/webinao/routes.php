@@ -1,6 +1,9 @@
 <?php
 use Betod\Webinao\Models\Products as Products;
-use Betod\Webinao\Models\Templates as Templates;
+use Betod\Webinao\Models\Orders as Orders;
+use Betod\Webinao\Models\Categories as Categories;
+use Betod\Webinao\Models\Filters as Filters;
+use Betod\Webinao\Controllers\PayPalController;
 use Illuminate\Support\Facades\Cache;
 
 Route::group(['prefix' => 'apiProduct'], function () {
@@ -67,3 +70,60 @@ Route::group(['prefix' => 'apiImage'], function () {
     })->where('path', '.*');
 });
 
+Route::group(['prefix' => 'apiOrder'], function () {
+    Route::post('createOrder', 'Betod\Webinao\Controllers\OrderController@createOrder');
+
+    Route::get('order/{order_code}', function ($order_code) {
+        $cacheDuration = 60;
+        $cacheKey = 'order_' . $order_code;
+        $data = Cache::remember($cacheKey, $cacheDuration, function () use ($order_code) {
+            return Orders::with('orderdetail.product')->where('order_code', $order_code)->first();
+        });
+        if (!$data) {
+            return response()->json(['message' => 'Order not found'], 404);
+        }
+        return $data;
+    });
+});
+
+Route::group(['prefix' => 'apiPaypal'], function () {
+    // Route để tạo đơn hàng
+    Route::post('createOrder', [PayPalController::class, 'createOrder']);
+
+    // Route để xác nhận thanh toán
+    Route::post('captureOrder', [PayPalController::class, 'captureOrder']);
+});
+
+Route::group(['prefix' => 'apiCategory'], function () {
+    Route::get('category/{slug}', function ($slug) {
+        $cacheDuration = 60;
+        $cacheKey = 'category_' . $slug;
+        $data = Cache::remember($cacheKey, $cacheDuration, function () use ($slug) {
+            $category = Categories::with(['parent'])->where('slug', $slug)->first();
+            $products = Products::with(['category.parent', 'image', 'variant'])->where('category_id', $category->id)->get();
+            ;
+            return [
+                'category' => $category->toArray(),
+                'products' => $products->toArray(),
+            ];
+        });
+        if (!$data) {
+            return response()->json(['message' => 'Không tìm thấy danh mục'], 404);
+        }
+        return response()->json($data);
+    });
+    Route::get('filter/{slug}', function ($slug) {
+        $cacheDuration = 60;
+        $cacheKey = 'filter_' . $slug;
+        $data = Cache::remember($cacheKey, $cacheDuration, function () use ($slug) {
+            $category = Categories::with(['parent'])->where('slug', $slug)->first();
+            $filters = Filters::with([])->where('category_id', $category->id)->get();
+
+            return $filters;
+        });
+        if (!$data) {
+            return response()->json(['message' => 'Không tìm thấy bộ lọc'], 404);
+        }
+        return response()->json($data);
+    });
+});

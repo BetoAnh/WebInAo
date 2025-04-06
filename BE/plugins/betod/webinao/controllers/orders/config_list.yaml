@@ -1,0 +1,12 @@
+list: $/betod/webinao/models/orders/columns.yaml
+modelClass: Betod\Webinao\Models\Orders
+title: Orders
+noRecordsMessage: 'backend::lang.list.no_records'
+showSetup: true
+showCheckboxes: true
+recordsPerPage: 20
+toolbar:
+    buttons: list_toolbar
+    search:
+        prompt: 'backend::lang.list.search_prompt'
+recordUrl: 'betod/webinao/orders/update/:id'

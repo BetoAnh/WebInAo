@@ -1,104 +1,58 @@
 <template>
   <a-flex vertical class="px-[100px] max-w-[100%] content">
-    <img
-      :src="
-        pathImg ||
-        'http://cptudong.vmts.vn/content/images/thumbs/default-image_450.png'
-      "
-      class="w-[100%] bg-red-500 mb-5"
-      v-if="pathImg"
-    />
     <a-flex
       justify="center"
       vertical
       class="gap-[40px] justify-between max-w-[100%]"
     >
-      <a-flex vertical>
-        <span
-          class="text-[28px] text-[#02b6ac] font-bold uppercase text-center"
-          >{{ nameCategory ? nameCategory : props.categorySlug }}</span
+      <a-flex class="justify-center">
+        <RouterLink :to="`/danh-muc/${categoryData.slug}`">
+          <span
+            class="text-[28px] text-[#02b6ac] font-bold uppercase text-center"
+            >{{ categoryData.name }}</span
+          ></RouterLink
         >
-        <a-flex class="max-w-[100%] justify-center">
-          <a-tabs class="nav max-w-[100%]" @change="changeData"
-            ><a-tab-pane
-              v-for="item in categoryChil"
-              :key="item.id"
-              :tab="item.name"
-              class="flex gap-[10px]"
-            ></a-tab-pane
-          ></a-tabs>
-        </a-flex>
       </a-flex>
       <a-flex
         horizontal
         class="max-w-[100%] overflow-hidden justify-center gap-[30px]"
-        v-if="dataChil.length > 0"
+        v-if="productData.length > 0"
       >
         <a-flex
-          v-for="itemChil in displayedItems"
-          :key="itemChil.id"
+          v-for="product in displayedItems"
+          :key="product.id"
           class="max-w-[100%] min-w-[100px]"
         >
           <a-flex vertical class="bg-[#F3F4F6] rounded-lg pb-[20px] w-full">
             <a-flex vertical align="center" class="flex-1">
               <div class="w-full relative pt-[20px] justify-center flex">
                 <img
-                  class="w-[300px] h-[300px] max-w-none"
+                  class="w-[250px]"
                   :src="
-                    itemChil.image?.path ||
+                    product.image?.path ||
                     'http://cptudong.vmts.vn/content/images/thumbs/default-image_450.png'
                   "
                 />
-                <div
-                  v-if="itemChil.sold_out >= 10"
-                  class="absolute bg-[#ffdc37] top-[20px] right-0 rounded-l-md z-10 bestseller"
-                >
-                  <span class="text-black"
-                    >Bán chạy <br />
-                    nhất</span
-                  >
-                </div>
-                <div
-                  v-else
-                  class="absolute bg-[#e20008] top-[20px] right-0 rounded-l-md label z-10 new"
-                >
-                  <span class="font-bold text-white">Mới nhất</span>
-                </div>
-                <div
-                  class="absolute cursor-pointer h-[100%] top-0 w-[100%] bg-gradient-to-r from-black/50 to-black/50 text-white p-2 description-nav rounded-t-lg z-20"
-                >
-                  <div
-                    v-html="
-                      itemChil.description
-                        ? itemChil.description
-                        : 'Chưa có mô tả'
-                    "
-                    class="max-h-[90%] overflow-y-scroll text-left test"
-                  />
-                </div>
               </div>
-              <a-flex class="px-[10px] w-[70%] text-center max-w-[200px]">
-                <a-flex gap="12" vertical class="flex-1 w-[100%]">
+              <a-flex class="px-[10px] w-[70%] text-center max-w-[200px] py-5">
+                <a-flex gap="5" vertical class="flex-1 w-[100%]">
                   <a
-                    :href="`/product/${itemChil.slug}`"
-                    class="text-[16px] font-bold max-w-[100%] hover:bg-[#F3F4F6] hover:text-[#02B6AC] cursor-pointer text-ellipsis overflow-hidden whitespace-nowrap"
+                    :href="`/san-pham/${product.slug}`"
+                    class="text-[16px] font-bold max-w-[100%] text-black hover:bg-[#F3F4F6] hover:text-[#02B6AC] cursor-pointer text-ellipsis overflow-hidden whitespace-nowrap"
                   >
-                    {{ itemChil.name ? itemChil.name : "Chưa có tên" }}
+                    {{ product.name ? product.name : "Chưa có tên" }}
                   </a>
                   <span class="text-[16px] font-bold text-[#02B6AC]">
-                    {{ formatCurrency(itemChil.price) }}
+                    {{
+                      product.variant[0]?.price
+                        ? formatCurrency(product.variant[0]?.price)
+                        : "Chưa có giá"
+                    }}
                   </span>
                   <a-flex vertical class="gap-[10px] text-[16px]">
                     <button
-                      class="flex-1 font-bold px-[12px] py-[10px] rounded-[9999px] text-white hover:bg-[#CC020B] bg-[linear-gradient(270deg,_#e20008_0%,_rgba(226,_0,_8,_0.7)_100%,_rgba(226,_0,_8,_0.68)_100%)] shadow-[#ff0000] shadow-sm"
-                      @click="handleAddToCart(itemChil)"
-                    >
-                      Mua ngay
-                    </button>
-
-                    <button
                       class="flex-1 font-sans border-[1px] border-[#4fa8e7] px-[12px] py-[10px] rounded-full text-white bg-[#02b6ac] hover:bg-[linear-gradient(270deg,_#ccf7fb_2.05%,_#fff_100%)] hover:text-[#424242]"
-                      @click="handleProductDetail(itemChil.slug)"
+                      @click="handleProductDetail(product.slug)"
                     >
                       Chi tiết
                     </button>
@@ -118,20 +72,16 @@
 
 <script setup>
 import { onMounted, ref, defineProps, onUnmounted, computed } from "vue";
-import { useRouter } from "vue-router";
+import { RouterLink, useRouter } from "vue-router";
 import "./ProductComponent.css";
-import { getDataFromIndexedDB } from "@/store/indexedDB";
-import store from "@/store/store";
+import axios from "axios";
 
 const router = useRouter();
-const dataChil = ref([]);
-const categoryChil = ref([]);
+const categoryData = ref([]);
 const productData = ref([]);
 const props = defineProps({
   categorySlug: [String, String],
 });
-const nameCategory = ref("");
-const pathImg = ref("");
 
 const formatCurrency = (value) => {
   return new Intl.NumberFormat("vi-VN", {
@@ -142,76 +92,20 @@ const formatCurrency = (value) => {
 
 const fetchData = async () => {
   try {
-    const [allCategoryData, allProductData] = await Promise.all([
-      getDataFromIndexedDB("category"),
-      getDataFromIndexedDB("products"),
-    ]);
-
-    const parentCategory = allCategoryData.find(
-      (item) => item.slug === props.categorySlug
+    const response = await axios.get(
+      `${import.meta.env.VITE_APP_URL_API_CATEGORY}/category/${
+        props.categorySlug
+      }`
     );
-    if (!parentCategory) return;
-
-    nameCategory.value = parentCategory.name || "";
-
-    categoryChil.value = allCategoryData.filter(
-      (item) => item.parent_id === parentCategory.id
-    );
-
-    const categoryIds = [
-      parentCategory.id,
-      ...categoryChil.value.map((item) => item.id),
-    ];
-
-    productData.value = allProductData.filter((product) =>
-      categoryIds.includes(product.category_id)
-    );
-
-    if (categoryChil.value.length > 0) {
-      fillterData(categoryChil.value[0].id);
-    } else {
-      fillterData(parentCategory.id);
-    }
+    categoryData.value = response.data?.category;
+    productData.value = response.data?.products;
   } catch (error) {
     console.error("Lỗi khi lấy dữ liệu:", error);
   }
 };
 
-const fillterData = (id) => {
-  dataChil.value = productData.value.filter(
-    (product) => Number(product.category_id) === Number(id)
-  );
-};
-
-const changeData = (id) => {
-  fillterData(id);
-};
-
-const handleAddToCart = async (data) => {
-  const currentCart = store.getters["product/getDataStoreCart"] || [];
-
-  let itemExists = false;
-  const updatedCart = currentCart.map((item) => {
-    if (item.id === data.id) {
-      itemExists = true;
-      return { id: item.id, quantity: (item.quantity || 1) + 1 };
-    }
-    return item;
-  });
-
-  if (!itemExists) {
-    updatedCart.push({ id: data.id, quantity: 1 });
-  }
-
-  store.commit("product/setDataStoreCart", {
-    dataStoreCart: updatedCart,
-  });
-
-  // console.log("Giỏ hàng sau khi cập nhật:", updatedCart);
-};
-
 const handleProductDetail = (items) => {
-  router.push(`/product/${items}`);
+  router.push(`/san-pham/${items}`);
 };
 
 onMounted(() => fetchData());
@@ -237,7 +131,9 @@ onUnmounted(() => {
   window.removeEventListener("resize", updateScreenWidth);
 });
 
-const displayedItems = computed(() => dataChil.value.slice(0, maxItems.value));
+const displayedItems = computed(() =>
+  productData.value.slice(0, maxItems.value)
+);
 </script>
 
 <style scoped>

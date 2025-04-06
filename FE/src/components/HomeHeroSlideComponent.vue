@@ -8,29 +8,12 @@
   >
     <swiper-slide>
       <img
-        src="https://livotec.com/wp-content/uploads/2025/01/bep-dien-tu-livotec-banner-pc.jpg"
+        src="../assets/Banner-trang-chu-101.jpg"
       />
     </swiper-slide>
     <swiper-slide>
       <img
-        src="https://livotec.com/wp-content/uploads/2025/02/banner-quat-dieu-hoa-livotec.jpg"
-      />
-    </swiper-slide>
-    <swiper-slide>
-      <img
-        src="https://livotec.com/wp-content/uploads/2025/02/KV-May-loc-nuoc-Livotec.jpg"
-      /> </swiper-slide
-    ><swiper-slide>
-      <img
-        src="https://livotec.com/wp-content/uploads/2025/02/KV-Binh-tam-nuoc-nong-Livotec.jpg"
-      /> </swiper-slide
-    ><swiper-slide>
-      <img
-        src="https://livotec.com/wp-content/uploads/2024/08/QCVN-Livotec-PC.jpg"
-      /> </swiper-slide
-    ><swiper-slide>
-      <img
-        src="https://livotec.com/wp-content/uploads/2024/05/Bao-hanh-livotec-PC.jpg.webp"
+        src="../assets/qua-tang-83.jpg"
       />
     </swiper-slide>
   </swiper>

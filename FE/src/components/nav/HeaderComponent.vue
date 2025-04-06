@@ -28,14 +28,14 @@
         </a-input>
       </a-flex>
       <a-flex class="flex md:hidden justify-center items-center p-3">
-        <AnOutlinedMenu class="text-[20px]" @click="showMenu" />
+        <AnOutlinedMenu class="text-[20px] text-black cursor-pointer" @click="showMenu" />
         <MenuComponent v-if="isOpenMenu" @close-menu="showMenu" />
       </a-flex>
       <a-flex class="items-center justify-end gap-4 md:flex hidden">
         <!-- <BxSearch class="" @click="showSearch" /> -->
         <SearchComponent v-if="isOpenSearch" @close-search="showSearch" />
         <a-badge
-          :count="quantityProductInCart"
+          :count="countCart"
           show-zero
           :number-style="{
             backgroundColor: '#fff',
@@ -46,11 +46,7 @@
           <BsCart2 class="text-[20px]" @click="showCart" />
         </a-badge>
         <!-- <AnOutlinedMenu class="icon iconHidden" @click="showMenu" /> -->
-        <MenuComponent v-if="isOpenMenu" @close-menu="showMenu" />
-        <RouterLink to="/san-pham/ao-thun-basic-unisex" class="px-3 text-black"
-          >TEst</RouterLink
-        >
-
+        <MenuComponent v-if="isOpenMenu" @close-menu="showMenu"/>
         <a-flex class="items-center whitespace-nowrap">
           <a-flex
             vertical
@@ -95,7 +91,7 @@
 <script setup>
 import MenuComponent from "../MenuComponent.vue";
 import SearchComponent from "../SearchComponent.vue";
-import { ref, onMounted, computed, watchEffect, watch, createVNode } from "vue";
+import { ref, onMounted, watchEffect, watch, createVNode, inject } from "vue";
 import { ExclamationCircleOutlined } from "@ant-design/icons-vue";
 import { Modal } from "ant-design-vue";
 import {
@@ -104,9 +100,9 @@ import {
   AnOutlinedMenu,
   CaUserAvatarFilledAlt,
 } from "@kalimahapps/vue-icons";
-import store from "@/store/store";
 import { useRoute, useRouter } from "vue-router";
 import axios from "axios";
+const { countCart } = inject("countCart");
 
 const router = useRouter();
 const route = useRoute();
@@ -220,9 +216,7 @@ onMounted(() => {
 
 const isOpenMenu = ref(false);
 const isOpenSearch = ref(false);
-const quantityProductInCart = computed(() => {
-  return store.getters["product/getDataStoreCart"].length;
-});
+
 const showCart = () => {
   router.push("/cart");
 };

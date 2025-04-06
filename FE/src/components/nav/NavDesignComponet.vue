@@ -96,19 +96,79 @@
         <span class="text-[20px] text-white font-semibold">{{
           formatCurrency(formattedPrice)
         }}</span>
-        <a-badge count="0" show-zero :offset="[0, 5]">
-          <a-avatar
-            shape="square"
-            size="large"
-            class="flex justify-center items-center"
-          >
-            <CoCart class="text-[20px]"
-          /></a-avatar>
-        </a-badge>
+        <a-popover
+          title="Giỏ hàng của tôi"
+          class="cursor-pointer p-2"
+          trigger="click"
+          @openChange="(open) => handleMenuVisible(open, 'cart')"
+        >
+          <template #content>
+            <div class="min-w-[250px] max-h-[300px] overflow-y-auto space-y-3">
+              <div
+                v-if="cartItems.length === 0"
+                class="text-center text-gray-400"
+              >
+                Giỏ hàng trống
+              </div>
+              <div
+                v-for="item in cartItems"
+                :key="item.id"
+                class="border p-2 rounded shadow"
+              >
+                <div class="flex gap-2">
+                  <div
+                    class="relative"
+                    :style="{ backgroundColor: item.variant.colorValue }"
+                  >
+                    <img
+                      :src="item.product.frontImage"
+                      class="w-[100px] h-[100px] object-cover z-30"
+                    />
+                    <img
+                      :src="item.frontImage"
+                      class="w-[50px] h-[60px] object-cover absolute top-[55%] translate-y-[-50%] left-[50%] translate-x-[-50%]"
+                    />
+                  </div>
+                  <div class="flex-1">
+                    <p class="text-sm font-semibold truncate w-[250px]">
+                      {{ item.product.name }}
+                    </p>
+                    <p class="text-xs text-gray-500">
+                      Giá: {{ item.price.toLocaleString() }}₫
+                    </p>
+                    <p class="text-xs">SL: {{ item.quantity }}</p>
+                  </div>
+                  <a
+                    @click="handleRemoveItem(item.id)"
+                    class="text-red-500 text-xs cursor-pointer"
+                    >Xoá</a
+                  >
+                </div>
+              </div>
+              <div class="py-2">
+                <RouterLink
+                  class="p-2 border-[1px] border-black rounded-md"
+                  to="/cart"
+                  >Chi tiết giỏ hàng</RouterLink
+                >
+              </div>
+            </div>
+          </template>
+          <a-badge :count="cartItems.length" show-zero :offset="[-5, 12]">
+            <a-avatar
+              shape="square"
+              size="large"
+              class="flex justify-center items-center"
+            >
+              <CoCart class="text-[20px]"
+            /></a-avatar>
+          </a-badge>
+        </a-popover>
       </a-flex>
       <a-flex class="gap-2 mx-5">
         <a-button
           class="bg-[#3f4652] border-none py-5 hover:bg-[#2b3039] flex justify-center items-center"
+          @click="handleAddToCartAndFetch"
         >
           <span class="text-white font-bold">THÊM GIỎ HÀNG</span></a-button
         >
@@ -131,11 +191,11 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { CoCart } from "@kalimahapps/vue-icons";
+import { getCartItems, removeCartItem } from "@/store/cartDB";
 const activePopover = ref(null);
-
-defineProps({
+const { handleAddToCart } = defineProps({
   formattedPrice: {
     type: Number,
     required: true,
@@ -148,7 +208,21 @@ defineProps({
     type: Function,
     required: true,
   },
+  handleAddToCart: {
+    type: Function,
+    required: true,
+  },
 });
+const cartItems = ref([]);
+
+const fetchCartItems = async () => {
+  cartItems.value = await getCartItems();
+};
+
+const handleAddToCartAndFetch = async () => {
+  await handleAddToCart();
+  await fetchCartItems();
+};
 
 const formatCurrency = (value) => {
   return new Intl.NumberFormat("vi-VN", {
@@ -156,14 +230,26 @@ const formatCurrency = (value) => {
     currency: "VND",
   }).format(value);
 };
-const handleMenuVisible = (open, id) => {
+
+const handleMenuVisible = async (open, id) => {
   activePopover.value = open ? id : null;
+  if (open && id === "cart") {
+    await fetchCartItems();
+  }
 };
 
-// Đóng popover khi click ra ngoài
+const handleRemoveItem = async (id) => {
+  await removeCartItem(id);
+  await fetchCartItems();
+};
+
 const closeMenu = () => {
   activePopover.value = null;
 };
+
+onMounted(() => {
+  fetchCartItems();
+});
 </script>
 
 <style scoped></style>

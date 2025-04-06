@@ -4,13 +4,13 @@
       :formattedPrice="formattedPrice"
       :exportToJson="exportToJson"
       :saveAsImage="saveAsImage"
+      :handleAddToCart="handleAddToCart"
     />
     <div class="relative flex pt-14 mb-14">
       <div class="w-[420px] bg-[#3F4652] h-screen fixed">
         <a-tabs
           v-model:activeKey="activeKey"
           tab-position="left"
-          @tabScroll="callback"
           type="card"
           class="h-screen pb-14 pr-6"
           :tabBarStyle="{
@@ -25,7 +25,7 @@
               </div>
             </template>
             <div class="py-2">
-              <h1 class="text-[20px] text-white">{{ product.name }}</h1>
+              <h1 class="text-[20px] text-white">{{ product?.name }}</h1>
               <div>
                 <span
                   class="bg-gray-400 text-[18px] p-1 text-white font-semibold rounded-sm"
@@ -45,7 +45,7 @@
                     <div
                       v-for="color in availableColors"
                       :key="color.id"
-                      @click="selectColor(color.value)"
+                      @click="selectColor(color)"
                     >
                       <a-popover>
                         <template #content>
@@ -59,7 +59,7 @@
                           }"
                         >
                           <AkCheck
-                            v-if="variant.colorValue === color.value"
+                            v-if="variant?.colorValue === color.value"
                             :class="
                               variant.colorValue == '#FFFFFF'
                                 ? 'text-black text-2xl'
@@ -484,9 +484,11 @@
 <script setup>
 import Konva from "konva";
 import NavDesignComponet from "@/components/nav/NavDesignComponet.vue";
-import { onMounted, ref, reactive, computed } from "vue";
+import { onMounted, ref, reactive, computed, nextTick, toRaw } from "vue";
+import { notification } from "ant-design-vue";
 import { useRoute } from "vue-router";
 import axios from "axios";
+import { addToCart } from "@/store/cartDB";
 import {
   BsBoxFill,
   UiPicture,
@@ -504,10 +506,7 @@ import {
 } from "@kalimahapps/vue-icons";
 import UploadImageComponent from "@/components/UploadImageComponent.vue";
 
-const activeKey = ref(3);
-const callback = (val) => {
-  console.log(val);
-};
+const activeKey = ref(2);
 
 const route = useRoute();
 const frontImage = ref(null);
@@ -890,20 +889,23 @@ const variant = reactive({
   sex: sex.value.find((item) => item.id == 1).value,
 });
 
-const selectColor = (value) => {
-  variant.colorValue = value;
+const selectColor = (color) => {
+  variant.colorValue = color.value;
+  variant.color = color.name;
 };
 
 const availableSizes = computed(() => {
-  if (!product.value.variant || product.value.variant.length === 0) return []; // Kiểm tra nếu variants chưa có dữ liệu
-  const variantSizes = new Set(product.value.variant.map((v) => v.size));
-  return sizes.value.filter((size) => variantSizes.has(size.value));
+  if (!product.value?.variant || product.value?.variant?.length === 0)
+    return []; // Kiểm tra nếu variants chưa có dữ liệu
+  const variantSizes = new Set(product.value?.variant?.map((v) => v.size));
+  return sizes.value?.filter((size) => variantSizes.has(size.value));
 });
 
 const availableColors = computed(() => {
-  if (!product.value.variant || product.value.variant.length === 0) return [];
-  const variantColors = new Set(product.value.variant.map((v) => v.color));
-  return colors.value.filter((color) => variantColors.has(color.name));
+  if (!product.value?.variant || product.value?.variant?.length === 0)
+    return [];
+  const variantColors = new Set(product.value?.variant?.map((v) => v.color));
+  return colors.value?.filter((color) => variantColors.has(color.name));
 });
 
 const fetchProduct = async () => {
@@ -913,7 +915,6 @@ const fetchProduct = async () => {
       `${import.meta.env.VITE_APP_URL_API_PRODUCT}/product/${slug}`
     );
     product.value = response.data;
-    console.log(product.value);
     frontImage.value = product.value?.category?.front_image?.path;
     backImage.value = product.value?.category?.back_image?.path;
     if (product.value?.front_template?.path) {
@@ -930,9 +931,66 @@ const fetchProduct = async () => {
       variant.size = firstVariant.size;
       variant.color = firstVariant.color;
     }
-    console.log(variant);
   } catch (error) {
     console.error("Không tìm thấy sản phẩm:", error);
+  }
+};
+
+const exportCurrentView = (stageRef) => {
+  const stage = stageRef.value.getStage();
+  return stage.toDataURL({ pixelRatio: 3 });
+};
+
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+const handleAddToCart = async () => {
+  if (product.value.avaiable === 0) {
+    notification.warning({
+      message: "Không thể thêm sản phẩm này!",
+    });
+    return null;
+  } else {
+    selectedId.value = null;
+    transformerActive.value = false;
+    transformerRef.value.getNode().nodes([]);
+    // Lưu trạng thái mặt hiện tại
+    const originalSide = currentSide.value;
+
+    // 👉 Export front
+    currentSide.value = "front";
+    await nextTick(); // Đợi DOM cập nhật
+    await delay(100); // Đợi canvas render (nếu cần)
+    const frontImage = exportCurrentView(stageRef);
+
+    // 👉 Export back
+    currentSide.value = "back";
+    await nextTick();
+    await delay(100);
+    const backImage = exportCurrentView(stageRef);
+
+    // 👉 Trả lại trạng thái ban đầu
+    currentSide.value = originalSide;
+
+    // 👉 Lưu vào IndexedDB
+
+    const cartItem = {
+      product: {
+        id: product.value.id,
+        name: product.value.name,
+        slug: product.value.slug,
+        frontImage: product.value?.category?.front_image?.path,
+        backImage: product.value?.category?.back_image?.path,
+      },
+      variant: toRaw(variant),
+      frontImage,
+      backImage,
+      quantity: toRaw(count.value),
+      price: toRaw(price.value),
+      createdAt: Date.now(),
+    };
+
+    await addToCart(cartItem);
+    console.log("Thêm thiết kế vào giỏ thành công!");
   }
 };
 

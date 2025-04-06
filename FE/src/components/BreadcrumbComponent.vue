@@ -3,7 +3,11 @@
     <a-flex class="flex-1 justify-between p-5 max-w-[1280px] container">
       <a-breadcrumb>
         <a-breadcrumb-item>
-          <router-link to="/">Trang chủ</router-link>
+          <router-link to="/"
+            ><a-flex class="justify-center items-center gap-1"
+              ><AnOutlinedHome />Trang chủ</a-flex
+            ></router-link
+          >
         </a-breadcrumb-item>
         <a-breadcrumb-item
           v-for="(item, index) in breadcrumbItems"
@@ -18,5 +22,6 @@
 
 <script setup>
 import { inject } from "vue";
+import { AnOutlinedHome } from "@kalimahapps/vue-icons";
 const { breadcrumbItems } = inject("breadcrumb");
 </script>

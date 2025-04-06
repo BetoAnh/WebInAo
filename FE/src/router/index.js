@@ -22,7 +22,7 @@ const router = createRouter({
       meta: { layout: "default" },
     },
     {
-      path: "/danh-muc/:parentSlug/:childrenSlug?",
+      path: "/danh-muc/:slug",
       name: "CategoryPage",
       component: () => import("../views/CategoryPage.vue"),
       meta: { layout: "default" },
@@ -31,12 +31,6 @@ const router = createRouter({
       path: "/chatBot",
       name: "chatBot",
       component: () => import("../components/chatBot/ChatBotComponent.vue"),
-    },
-    {
-      path: "/nav",
-      name: "nav",
-      component: () => import("../components/NavProductComponent.vue"),
-      meta: { layout: "default" },
     },
     {
       path: "/menu",
@@ -51,12 +45,6 @@ const router = createRouter({
       meta: { layout: "default" },
     },
     {
-      path: "/compareProducts",
-      name: "compareProducts",
-      component: () => import("../views/CompareProducts.vue"),
-      meta: { layout: "default" },
-    },
-    {
       path: "/payment",
       name: "payment",
       component: () => import("../views/PaymentPage.vue"),
@@ -67,12 +55,6 @@ const router = createRouter({
       name: "cart",
       component: () => import("../views/CartPage.vue"),
       meta: { layout: "default" },
-    },
-    {
-      path: "/guaranteeHome",
-      name: "guaranteeHome",
-      component: () => import("../views/GuaranteeHomePage.vue"),
-      meta: { layout: "guarantee" },
     },
     {
       path: "/news",
