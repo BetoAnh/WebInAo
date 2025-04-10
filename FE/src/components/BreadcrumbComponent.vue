@@ -5,7 +5,7 @@
         <a-breadcrumb-item>
           <router-link to="/"
             ><a-flex class="justify-center items-center gap-1"
-              ><AnOutlinedHome />Trang chủ</a-flex
+              ><AnOutlinedHome class="text-black" />Trang chủ</a-flex
             ></router-link
           >
         </a-breadcrumb-item>

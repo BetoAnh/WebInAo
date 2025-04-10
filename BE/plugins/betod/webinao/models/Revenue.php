@@ -6,7 +6,7 @@ use Model;
 /**
  * Model
  */
-class Additional_user extends Model
+class Revenue extends Model
 {
     use \October\Rain\Database\Traits\Validation;
 
@@ -15,11 +15,7 @@ class Additional_user extends Model
      * @var string table in the database used by the model.
      */
     public $table = 'betod_webinao_additional_user';
-    protected $fillable = ['user_id', 'phone', 'province', 'district', 'subdistrict', 'address'];
-
-    public $belongsTo = [
-        'user' => 'RainLab\User\Models\User'
-    ];
+    protected $fillable = ['sale_date', 'total_revenue'];
     /**
      * @var array rules for validation.
      */

@@ -61,7 +61,7 @@ const formatCurrency = (value) => {
 };
 
 const handleProductDetail = (items) => {
-  router.push(`/product/${items}`);
+  router.push(`/san-pham/${items}`);
 };
 </script>
 

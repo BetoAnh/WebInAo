@@ -1,0 +1,10 @@
+name: Revenue
+form: $/betod/webinao/models/revenue/fields.yaml
+modelClass: Betod\Webinao\Models\Revenue
+defaultRedirect: betod/webinao/revenue
+create:
+    redirect: 'betod/webinao/revenue/update/:id'
+    redirectClose: betod/webinao/revenue
+update:
+    redirect: betod/webinao/revenue
+    redirectClose: betod/webinao/revenue

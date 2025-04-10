@@ -252,8 +252,7 @@ const applyFilter = async () => {
     });
   });
 };
-
-onMounted(async () => {
+const fetchCategory = async () => {
   try {
     const { slug } = route.params;
     const response = await axios.get(
@@ -266,8 +265,6 @@ onMounted(async () => {
       `${import.meta.env.VITE_APP_URL_API_CATEGORY}/filter/${slug}`
     );
     filterData.value = response2.data;
-    console.log(filterData.value);
-
     const breadcrumbItems = [
       {
         name: categoryData.value?.name,
@@ -279,6 +276,9 @@ onMounted(async () => {
   } catch (error) {
     console.error("Error fetching category:", error);
   }
+};
+onMounted(() => {
+  fetchCategory();
 });
 
 // Theo dõi sự thay đổi của `selectedFilter` để cập nhật sản phẩm
@@ -353,6 +353,13 @@ const sortProducts = (order) => {
       break;
   }
 };
+
+watch(
+  () => route.params.slug,
+  () => {
+    fetchCategory();
+  }
+);
 </script>
 
 <style scoped>

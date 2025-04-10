@@ -40,8 +40,17 @@ import { useRoute } from "vue-router";
 const route = useRoute();
 const openChat = ref(false);
 
-const excludedRoutes = ["/", "/login", "/profile"];
-const showBreadcrumb = computed(() => !excludedRoutes.includes(route.path));
+const excludedRoutes = ["/", "/login", "/profile", "/blogs"];
+
+const excludedPrefixes = ["/detailNews/"];
+
+const showBreadcrumb = computed(() => {
+  const isExactExcluded = excludedRoutes.includes(route.path);
+  const isPrefixExcluded = excludedPrefixes.some((prefix) =>
+    route.path.startsWith(prefix)
+  );
+  return !isExactExcluded && !isPrefixExcluded;
+});
 
 const hanldeOpenChatBot = () => {
   openChat.value = true;

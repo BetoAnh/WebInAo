@@ -26,3 +26,7 @@ navigation:
                 label: Filters
                 url: betod/webinao/filters
                 icon: icon-filter
+            side-menu-item5:
+                label: 'Thống kê'
+                url: betod/webinao/revenue
+                icon: icon-trophy

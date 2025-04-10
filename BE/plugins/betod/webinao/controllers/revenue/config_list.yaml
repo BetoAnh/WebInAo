@@ -1,0 +1,12 @@
+list: $/betod/webinao/models/revenue/columns.yaml
+modelClass: Betod\Webinao\Models\Revenue
+title: Revenue
+noRecordsMessage: 'backend::lang.list.no_records'
+showSetup: true
+showCheckboxes: true
+recordsPerPage: 20
+toolbar:
+    buttons: list_toolbar
+    search:
+        prompt: 'backend::lang.list.search_prompt'
+recordUrl: 'betod/webinao/revenue/update/:id'

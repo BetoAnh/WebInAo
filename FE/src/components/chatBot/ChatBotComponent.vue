@@ -45,11 +45,11 @@
           <li v-for="(chat, index) in chatHistory" :key="index">
             <p
               v-if="chat.answer !== null"
-              class="text-purple-600 whitespace-pre-line"
+              class="text-purple-600 whitespace-pre-line capitalize"
             >
               <strong>Chatbot:</strong> {{ chat.answer }}
             </p>
-            <p class="text-blue-600 text-end">
+            <p class="text-blue-600 text-end capitalize">
               <strong>Bạn:</strong> {{ chat.question }}
             </p>
           </li>
@@ -109,7 +109,7 @@ const askChatbot = async (type) => {
 
     setTimeout(() => {
       newChat.answer = data?.reply || "Không nhận được phản hồi từ chatbot.";
-      chatHistory.value = [...chatHistory.value]; 
+      chatHistory.value = [...chatHistory.value];
     }, 1000);
   } catch (error) {
     console.error("Lỗi khi hỏi chatbot:", error);

@@ -57,8 +57,8 @@ const router = createRouter({
       meta: { layout: "default" },
     },
     {
-      path: "/news",
-      name: "news",
+      path: "/blogs",
+      name: "blog",
       component: () => import("../views/newsPage/NewsPage.vue"),
       meta: { layout: "default" },
     },
@@ -104,6 +104,12 @@ const router = createRouter({
       name: "Edit",
       component: () => import("../views/DesignPage.vue"),
       meta: { layout: "none" },
+    },
+    {
+      path: "/lien-he",
+      name: "Contact",
+      component: () => import("../views/ContactPage.vue"),
+      meta: { layout: "default" },
     },
   ],
   scrollBehavior(to, from, savedPosition) {

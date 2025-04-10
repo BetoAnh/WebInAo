@@ -55,7 +55,7 @@
                   <div class="w-full">
                     <label
                       for="first_name"
-                      class="block mb-2 text-sm font-medium text-indigo-900 dark:text-white"
+                      class="block mb-2 text-sm font-medium text-indigo-900"
                       >Tên</label
                     >
                     <input
@@ -72,7 +72,7 @@
                   <div class="w-full">
                     <label
                       for="last_name"
-                      class="block mb-2 text-sm font-medium text-indigo-900 dark:text-white"
+                      class="block mb-2 text-sm font-medium text-indigo-900"
                       >Họ</label
                     >
                     <input
@@ -89,7 +89,7 @@
                 <div class="mb-2 sm:mb-6">
                   <label
                     for="email"
-                    class="block mb-2 text-sm font-medium text-indigo-900 dark:text-white"
+                    class="block mb-2 text-sm font-medium text-indigo-900"
                     >Email</label
                   >
                   <input
@@ -103,7 +103,7 @@
                 <div class="mb-2 sm:mb-6">
                   <label
                     for="phone"
-                    class="block mb-2 text-sm font-medium text-indigo-900 dark:text-white"
+                    class="block mb-2 text-sm font-medium text-indigo-900"
                     >Số điện thoại</label
                   >
                   <input
@@ -119,7 +119,7 @@
                 <div class="mb-2 sm:mb-6">
                   <label
                     for="province"
-                    class="block mb-2 text-sm font-medium text-indigo-900 dark:text-white"
+                    class="block mb-2 text-sm font-medium text-indigo-900"
                     >Tỉnh/Thành phố</label
                   >
                   <a-select
@@ -143,7 +143,7 @@
                 <div class="mb-2 sm:mb-6">
                   <label
                     for="email"
-                    class="block mb-2 text-sm font-medium text-indigo-900 dark:text-white"
+                    class="block mb-2 text-sm font-medium text-indigo-900"
                     >Quận/Huyện</label
                   >
                   <a-select
@@ -167,7 +167,7 @@
                 <div class="mb-2 sm:mb-6">
                   <label
                     for="subdistrict"
-                    class="block mb-2 text-sm font-medium text-indigo-900 dark:text-white"
+                    class="block mb-2 text-sm font-medium text-indigo-900"
                     >Xã/Phường/Thị trấn</label
                   >
                   <a-select
@@ -190,7 +190,7 @@
                 <div class="mb-2 sm:mb-6">
                   <label
                     for="address"
-                    class="block mb-2 text-sm font-medium text-indigo-900 dark:text-white"
+                    class="block mb-2 text-sm font-medium text-indigo-900"
                     >Street address</label
                   >
                   <input
@@ -255,7 +255,7 @@
                 <div class="mb-2 sm:mb-6">
                   <label
                     for="old_password"
-                    class="block mb-2 text-sm font-medium text-indigo-900 dark:text-white"
+                    class="block mb-2 text-sm font-medium text-indigo-900"
                     >Mật khẩu cũ</label
                   >
                   <div class="relative">
@@ -284,7 +284,7 @@
                 <div class="mb-2 sm:mb-6">
                   <label
                     for="new_password"
-                    class="block mb-2 text-sm font-medium text-indigo-900 dark:text-white"
+                    class="block mb-2 text-sm font-medium text-indigo-900"
                     >Mật khẩu mới</label
                   >
                   <div class="relative">
@@ -313,7 +313,7 @@
                 <div class="mb-2 sm:mb-6">
                   <label
                     for="confirm_password"
-                    class="block mb-2 text-sm font-medium text-indigo-900 dark:text-white"
+                    class="block mb-2 text-sm font-medium text-indigo-900"
                     >Xác nhận mật khẩu mới</label
                   >
                   <div class="relative">
@@ -478,6 +478,7 @@ const fetchProfile = () => {
     profile.value.address = user.additional_user?.address || "";
   }
 };
+
 const handleChangeInfo = async () => {
   try {
     const response = await axios.post(

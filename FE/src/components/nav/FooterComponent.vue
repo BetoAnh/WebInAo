@@ -5,7 +5,7 @@
       class="flex-1 justify-between pt-[50px] pb-[30px] gap-[24px] border-b-[1px] border-[#DCDFE8]"
     >
       <a-flex class="flex justify-center items-center">
-        <img src="@/assets/logo.png" class="w-[300px]" />
+        <img src="@/assets/logo.png" class="max-w-[200px]" />
       </a-flex>
       <a-flex vertical class="flex-2 justify-end gap-[12px]">
         <!-- Cần UPDATE -->

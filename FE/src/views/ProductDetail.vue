@@ -390,7 +390,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref, inject, reactive, computed, toRaw } from "vue";
+import { onMounted, ref, inject, reactive, computed, toRaw, watch } from "vue";
 import { useRoute } from "vue-router";
 import ProductSpecifications from "@/components/ProductSpecifications.vue";
 import ProductPosts from "@/components/ProductPosts.vue";
@@ -556,15 +556,13 @@ const availableColors = computed(() => {
   return colors.value.filter((color) => variantColors.has(color.name));
 });
 
-onMounted(async () => {
+const fetchProduct = async () => {
   try {
     const { slug } = route.params;
     const response = await axios.get(
       `${import.meta.env.VITE_APP_URL_API_PRODUCT}/product/${slug}`
     );
     product.value = response.data;
-    console.log(product.value);
-
     if (product.value.variant && product.value.variant.length > 0) {
       const firstVariant = product.value.variant[0];
       variant.colorValue = colors.value.find(
@@ -585,7 +583,18 @@ onMounted(async () => {
   } catch (error) {
     console.error("Không tìm thấy sản phẩm:", error);
   }
+};
+
+onMounted(() => {
+  fetchProduct();
 });
+
+watch(
+  () => route.params.slug,
+  () => {
+    fetchProduct();
+  }
+);
 
 const getCORSImageURL = (url) => {
   if (!url) {

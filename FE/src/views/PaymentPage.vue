@@ -115,6 +115,18 @@
                     />
                   </a-form-item>
                 </a-flex>
+                <div>
+                  <a-button type="primary" @click="showModal('billing_address')"
+                    >Nhập địa chỉ bằng bản bồ</a-button
+                  >
+                  <a-modal
+                    v-model:open="openPickAddress"
+                    title="Click chọn vị trí"
+                    @ok="handleOkBillingAddress"
+                  >
+                    <AddressOnMap @addressData="getAddressData" />
+                  </a-modal>
+                </div>
               </a-flex>
               <a-flex vertical class="w-full flex-1">
                 <h3>
@@ -229,6 +241,18 @@
                       />
                     </a-form-item>
                   </a-flex>
+                  <div class="mb-5">
+                    <a-button type="primary" @click="showModal('ship_address')"
+                      >Nhập địa chỉ bằng bản đồ</a-button
+                    >
+                    <a-modal
+                      v-model:open="openPickDiffAddress"
+                      title="Click chọn vị trí"
+                      @ok="handleOkShipAddress"
+                    >
+                      <AddressOnMap @addressData="getAddressData" />
+                    </a-modal>
+                  </div>
                 </a-flex>
                 <a-form-item name="notes">
                   <template #label>
@@ -391,9 +415,14 @@ import { useRouter } from "vue-router";
 import { Modal } from "ant-design-vue";
 const { setBreadcrumb } = inject("breadcrumb");
 import { getCartItems, clearCart } from "@/store/cartDB";
+import AddressOnMap from "@/components/AddressOnMap.vue";
 
 const router = useRouter();
 const PayPalButtonRef = ref(false);
+
+const openPickAddress = ref(false);
+const openPickDiffAddress = ref(false);
+const addressMap = ref(null);
 
 const dataTable = ref([]);
 
@@ -433,7 +462,6 @@ const fetchDataTable = async () => {
   try {
     const cartItems = await getCartItems();
     dataTable.value = cartItems || [];
-    console.log(dataTable.value);
 
     formState.items = dataTable.value.map((item) => ({
       product_id: item.product?.id,
@@ -448,7 +476,7 @@ const fetchDataTable = async () => {
   }
 };
 
-const checkUser = () => {
+const checkUser = async () => {
   const user = JSON.parse(sessionStorage.getItem("user"));
   if (user) {
     formState.user_id = user.id;
@@ -456,12 +484,11 @@ const checkUser = () => {
     formState.phone = user.additional_user?.phone;
     formState.email = user.email;
     LocateState.province = user.additional_user?.province;
-    onProvinceChange();
+    await onProvinceChange();
     LocateState.district = user.additional_user?.district;
-    onDistrictChange();
+    await onDistrictChange();
     LocateState.subdistrict = user.additional_user?.subdistrict;
     formState.address = user.additional_user?.address;
-    // console.log(LocateState);
   }
 };
 
@@ -620,27 +647,27 @@ function handleDiffProvinceChange(newDiffProvinceCode) {
   const selectedDiffProvince = provinces.value.find(
     (p) => p.code === newDiffProvinceCode
   );
-  formState.diffprovince = selectedDiffProvince
-    ? selectedDiffProvince.name
-    : "";
+  if (selectedDiffProvince) {
+    formState.diffprovince = selectedDiffProvince.name;
+  }
 }
 
 function handleDiffDistrictChange(newDiffDistrictCode) {
   const selectedDiffDistrict = diffdistricts.value.find(
     (d) => d.code === newDiffDistrictCode
   );
-  formState.diffdistrict = selectedDiffDistrict
-    ? selectedDiffDistrict.name
-    : "";
+  if (selectedDiffDistrict) {
+    formState.diffdistrict = selectedDiffDistrict.name;
+  }
 }
 
 function handleDiffSubdistrictChange(newDiffSubdistrictCode) {
   const selectedDiffSubdistrict = diffwards.value.find(
     (w) => w.code === newDiffSubdistrictCode
   );
-  formState.diffsubdistrict = selectedDiffSubdistrict
-    ? selectedDiffSubdistrict.name
-    : "";
+  if (selectedDiffSubdistrict) {
+    formState.diffsubdistrict = selectedDiffSubdistrict.name;
+  }
 }
 
 watch(() => LocateState.province, handleProvinceChange);
@@ -751,8 +778,58 @@ const rules = {
   ],
 };
 
+const getAddressData = (data) => {
+  addressMap.value = data;
+};
+
+const showModal = (type) => {
+  if (type === "billing_address") {
+    openPickAddress.value = true;
+  }
+  if (type === "ship_address") {
+    openPickDiffAddress.value = true;
+  }
+};
+const handleOkBillingAddress = (e) => {
+  const parts = addressMap.value?.label.split(",").map((part) => part.trim());
+  if (
+    addressMap.value?.street?.includes(parts[0]) ||
+    parts[0]?.includes(addressMap.value?.street)
+  ) {
+    formState.address = parts[0];
+  } else {
+    formState.address = parts[0] + " " + addressMap.value?.street;
+  }
+  formState.province = addressMap.value?.county;
+  LocateState.province = addressMap.value?.county;
+  formState.district = addressMap.value?.city;
+  LocateState.district = addressMap.value?.city;
+  formState.subdistrict = addressMap.value?.district;
+  LocateState.subdistrict = addressMap.value?.district;
+  openPickAddress.value = false;
+};
+
+const handleOkShipAddress = (e) => {
+  const parts = addressMap.value?.label.split(",").map((part) => part.trim());
+  if (
+    addressMap.value?.street?.includes(parts[0]) ||
+    parts[0]?.includes(addressMap.value?.street)
+  ) {
+    formState.diffaddress = parts[0];
+  } else {
+    formState.diffaddress = parts[0] + " " + addressMap.value?.street;
+  }
+  formState.diffprovince = addressMap.value?.county;
+  LocateState.diffprovince = addressMap.value?.county;
+  formState.diffdistrict = addressMap.value?.city;
+  LocateState.diffdistrict = addressMap.value?.city;
+  formState.diffsubdistrict = addressMap.value?.district;
+  LocateState.diffsubdistrict = addressMap.value?.district;
+  openPickDiffAddress.value = false;
+};
+
 const onSubmit = async () => {
-  // console.log(formState, LocateState);
+  console.log(formState);
   if (!formState.province) {
     handleProvinceChange(LocateState.province);
   }

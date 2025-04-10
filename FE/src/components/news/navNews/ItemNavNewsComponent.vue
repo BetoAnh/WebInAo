@@ -12,9 +12,7 @@
               :href="`detailNews/${dataFake[0].slug}`"
               class="hover:bg-white p-0"
             >
-              <img
-                src="https://livotec.com/wp-content/uploads/2025/02/Bep-Tu-don-Livotec-E-smart-%E2%80%93-Tiet-kiem-thoi-gian-va-dien-nang-100.jpg"
-              />
+              <img src="https://inchi.vn/data/cms_upload/files/I.png" />
             </a>
           </a-flex>
           <a-flex vertical class="gap-[10px]">
@@ -56,7 +54,7 @@
                 <img
                   :src="
                     item.featured_images?.path ||
-                    'https://www.generationsforpeace.org/wp-content/uploads/2018/03/empty-300x240.jpg'
+                    'https://inchi.vn/data/cms_upload/files/I.png'
                   "
                   class="h-[190px]"
                 />
@@ -191,7 +189,7 @@ const modules = [Navigation];
 const data = ref([]);
 const dataFake = ref([]);
 const defaultImage =
-  "https://livotec.com/wp-content/uploads/2024/11/Binh-tam-nong-lanh-%E2%80%93-Giai-phap-hoan-hao-cho-ngoi-nha-hien-dai.jpg";
+  "https://inchi.vn/data/cms_upload/files/I.png";
 
 const fetchData = async () => {
   try {

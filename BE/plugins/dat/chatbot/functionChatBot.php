@@ -2,8 +2,8 @@
 
 use Illuminate\Support\Facades\Cache;
 use GuzzleHttp\Client;
-use Betod\Livotec\Models\Category;
-use Betod\Livotec\Models\Product;
+use Betod\Webinao\Models\Categories as Category;
+use Betod\Webinao\Models\Products as Product;
 use Illuminate\Support\Facades\Log;
 
 function handleProductFind($message)

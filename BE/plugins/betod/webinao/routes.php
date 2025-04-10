@@ -7,6 +7,25 @@ use Betod\Webinao\Controllers\PayPalController;
 use Illuminate\Support\Facades\Cache;
 
 Route::group(['prefix' => 'apiProduct'], function () {
+
+    Route::get('search', function () {
+        $cacheDuration = 60;
+        $cacheKey = 'products_';
+
+        $data = Cache::remember($cacheKey, $cacheDuration, function () {
+            return Products::select('id', 'name', 'slug')->get()->map(function ($product) {
+                return [
+                    'id' => $product->id,
+                    'name' => $product->name,
+                    'slug' => $product->slug,
+                    'image' => $product->image ? $product->image->getPath() : null,
+                ];
+            });
+        });
+
+        return response()->json($data);
+    });
+
     Route::get('product/{slug}', function ($slug) {
 
         $cacheDuration = 60;
@@ -19,42 +38,8 @@ Route::group(['prefix' => 'apiProduct'], function () {
         }
         return response()->json($product);
     });
-
-    Route::get('category/{slug}/{childrenSlug?}', function ($slug, $childrenSlug = null) {
-        $cacheDuration = 60;
-        if ($childrenSlug) {
-            $cacheKey = 'products_' . $slug . '_' . $childrenSlug;
-            $products = Cache::remember($cacheKey, $cacheDuration, function () use ($childrenSlug) {
-                return Products::with(['category', 'variant'])
-                    ->whereHas('category', function ($query) use ($childrenSlug) {
-                        $query->where('slug', $childrenSlug);
-                    })
-                    ->get();
-            });
-        } else {
-            $cacheKey = 'products_' . $slug;
-            $products = Cache::remember($cacheKey, $cacheDuration, function () use ($slug) {
-                $productsParent = Products::with(['category', 'variant'])
-                    ->whereHas('category', function ($query) use ($slug) {
-                        $query->where('slug', $slug);
-                    })
-                    ->get();
-
-                $productsChildren = Products::with(['category', 'variant'])
-                    ->whereHas('category.parent', function ($query) use ($slug) {
-                        $query->where('slug', $slug);
-                    })
-                    ->get();
-
-                return $productsParent->merge($productsChildren);
-            });
-        }
-        if (!$products) {
-            return response()->json(['message' => 'Product not found'], 404);
-        }
-        return response()->json($products);
-    });
 });
+
 Route::group(['prefix' => 'apiImage'], function () {
     Route::get('/image-proxy/{path}', function ($path) {
         $fullPath = storage_path('app/uploads/public/' . $path);
@@ -95,6 +80,18 @@ Route::group(['prefix' => 'apiPaypal'], function () {
 });
 
 Route::group(['prefix' => 'apiCategory'], function () {
+    Route::get('categories', function () {
+        $cacheDuration = 60;
+        $cacheKey = 'categories_';
+        $data = Cache::remember($cacheKey, $cacheDuration, function () {
+            return Categories::get();
+        });
+        if (!$data) {
+            return response()->json(['message' => 'Không tìm thấy danh mục'], 404);
+        }
+        return response()->json($data);
+    });
+
     Route::get('category/{slug}', function ($slug) {
         $cacheDuration = 60;
         $cacheKey = 'category_' . $slug;
@@ -126,4 +123,57 @@ Route::group(['prefix' => 'apiCategory'], function () {
         }
         return response()->json($data);
     });
+});
+
+
+use RainLab\Blog\Models\Category;
+use RainLab\Blog\Models\Post;
+
+Route::group(['prefix' => 'apiPost'], function () {
+    Route::get('allPost', function () {
+        $allPost = Post::all();
+        if ($allPost) {
+            return response()->json(['data' => $allPost, 'status' => 1]);
+        } else {
+            return response()->json(['data' => 'No data', 'status' => 0]);
+        }
+    });
+
+    Route::get('post/{slug}', function ($slug) {
+        $post = Post::with(['categories', 'user'])->where('slug', $slug)->first();
+
+        if (!$post) {
+            return response()->json(null);
+        }
+        return response()->json([
+            'data' => $post,
+        ]);
+    });
+
+
+    Route::get('hotNews/{slugCategory}', function ($slugCategory) {
+        $hotNews = Post::with(['featured_images', 'categories'])
+            ->whereHas('categories', function ($query) use ($slugCategory) {
+                $query->where('slug', $slugCategory);
+            })
+            ->get();
+
+        return response()->json([
+            'data' => $hotNews
+        ]);
+    });
+
+
+    Route::get('allPostCategory', function () {
+        $allPostCategory = Category::all();
+        if ($allPostCategory) {
+            return response()->json(['data' => $allPostCategory, 'status' => 1]);
+        } else {
+            return response()->json(['data' => 'No data', 'status' => 0]);
+        }
+    });
+});
+
+Route::group(['prefix' => 'apiData'], function () {
+    Route::get('data', [\Betod\Webinao\Controllers\Revenue\RevenueChart::class, 'chart']);
 });

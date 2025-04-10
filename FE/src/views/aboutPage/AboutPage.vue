@@ -1,77 +1,55 @@
 <template>
-  <DefaultLayout class="bg-[#F8F7F5]">
-    <a-flex vertical class="w-[100%] px-[20px] pt-[60px] a">
-      <a-flex class="w-full gap-[50px] mb-[80px]">
-        <a-flex vertical class="flex-1">
-          <h1 class="text-[31px] text-[#02b6ac] font-bold mb-4 uppercase">
-            Về chúng tôi
-          </h1>
-          <span class="text-[15px] leading-[25px] font-medium"
-            >Livotec là một thương hiệu điện gia dụng đa ngành, được thành lập
-            với sứ mệnh giúp người Việt SỐNG KHỎE MỖI NGÀY. Với tầm nhìn dài
-            hạn, Livotec đầu tư và phát triển để trở thành một thương hiệu điện
-            gia dụng không chỉ đáp ứng nhu cầu của người dân Việt Nam mà còn
-            vươn ra thị trường quốc tế.<br /><br />
+  <div class="w-full flex justify-center bg-white text-black">
+    <div class="max-w-[1280px] container">
+      <a-flex vertical class="w-[100%] px-[20px] pt-[20px]">
+        <a-flex class="w-full gap-[50px] mb-[80px]">
+          <a-flex vertical class="flex-1">
+            <h1 class="text-[31px] text-[#02b6ac] py-3 font-bold uppercase">
+              Về chúng tôi
+            </h1>
+            <p class="text-[25px] font-semibold uppercase">
+              NỀN TẢNG IN ÁO TRỰC TUYẾN KHÔNG PHẢI ĐẦU TIÊN TẠI VIỆT NAM
+            </p>
+            <p class="text-[20px] italic mb-4">
+              Personalized Gifts And Stuffs For Everyone
+            </p>
+            <span class="text-[15px] leading-[25px] font-medium pb-3"
+              >Nền tảng in ấn cá nhân hóa trực tuyến cho tất cả mọi người, đó
+              chính là điều INTHEDARK mong muốn hướng tới kể từ những ngày đầu
+              tiên ra mắt 2019. Công nghệ chính là khởi đầu, chúng tôi đã xây
+              dựng và đang phát triển thêm các công nghệ mới nhằm đáp ứng đa
+              dạng sản phẩm.<br /><br />
 
-            Livotec định vị là thương hiệu cung cấp các sản phẩm chất lượng tốt
-            mang đến sự chăm sóc sức khỏe và tiện lợi cho khách hàng trong phân
-            khúc phổ thông và cao cấp hơn.<br /><br />
+              INTHEDARK luôn đề cao tính linh hoạt, tự động hóa trong quá trình
+              thiết kế & in ấn và đảm bảo giao hàng trong thời gian ngắn nhất
+              khi mọi người sử dụng nền tảng này.<br /><br />
 
-            Bên cạnh CHẤT LƯỢNG VƯỢT TRỘI, các sản phẩm của Livotec còn chú
-            trọng đến yếu tố AN TOÀN – BỀN BỈ, đồng thời giúp tiết kiệm chi phí,
-            phù hợp với người tiêu dùng có thu nhập phổ thông và trên phổ
-            thông.</span
-          >
-        </a-flex>
-        <a-flex class="flex-1">
-          <img
-            src="https://livotec.com/wp-content/uploads/2024/05/KV-Livotec-PC-1.jpg.webp"
-            class="w-full h-1/2"
-          />
+              Sáng tạo và cá nhân hóa mọi thứ, là nguồn cảm hứng cho mọi lứa
+              tuổi và chúng tôi không chỉ dừng lại ở thế hệ trẻ nói riêng. Cho
+              tới thời điểm hiện tại, INTHEDARK tự hào với những sản phẩm của
+              mình đã đồng hành cùng hàng ngàn người tiêu dùng Việt Nam.
+            </span>
+            <strong class="text-[18px] py-3">SỨ MỆNH</strong>
+            <p class="text-[15px] leading-[25px] font-medium pb-3">
+              Trở thành nền tảng trực tuyến đầu tiên và cá nhân hóa số 1 tại
+              Việt Nam, trở thành doanh nghiệp có đóng góp và trách nhiệm với
+              cộng đồng, xã hội.
+            </p>
+            <strong class="text-[18px] py-3">TẦM NHÌN</strong>
+            <p class="text-[15px] leading-[25px] font-medium pb-3">
+              Với nền tảng cá nhân hóa sản phẩm, INCHI mong muốn giúp hàng triệu
+              người dùng Việt Nam tự tin thể hiện cá tính của mình và cùng nhau
+              sáng tạo những món quà tặng đặc biệt với ý nghĩa độc đáo cho bạn
+              và những người thân yêu quý. Qua đó đem lại cuộc sống hạnh phúc và
+              vui vẻ hơn cho tất cả mọi người.
+            </p>
+          </a-flex>
         </a-flex>
       </a-flex>
-      <a-flex v-for="item in anotherNews" :key="item.id">
-        <a-flex vertical class="flex-1 justify-center items-center ">
-          <span class="text-[2rem] font-bold ">
-            {{ item.title }}
-          </span>
-          <span class="text-black text-[14px] font-medium mb-[20px]">
-            {{ item.description }}
-          </span>
-          <img :src="item.img" class="mb-[20px]"/>
-        </a-flex>
-      </a-flex>
-    </a-flex>
-  </DefaultLayout>
+    </div>
+  </div>
 </template>
 
-<script setup>
-import { ref } from "vue";
-import DefaultLayout from "../../components/layouts/DefaultLayout.vue";
-
-const anotherNews = ref([
-  {
-    id: 1,
-    title: "ĐẠT CHUẨN QCVN 6-1:2010/BYT",
-    description:
-      "Máy lọc nước Livotec đạt chuẩn nước nước uống tinh khiết chuẩn đóng chai QCVN 6-1:2010/BYT do Viện Sức khỏe nghề nghiệp & Môi trường cấp theo tiêu chuẩn khắt khe của Bộ Y Tế và WHO. Nước sau lọc có thể uống trực tiếp tại vòi, không cần đun sôi. ",
-    img: "https://livotec.com/wp-content/uploads/2024/08/QCVN-Livotec-PC.jpg",
-  },
-  {
-    id: 2,
-    title: "HỆ LÕI LỌC HIỆU SUẤT CAO HIỆN ĐẠI MAX PERFORMANCE",
-    description:
-      "Hệ lõi lọc hiệu suất cao Max Performance với cụm lõi lọc thô hiện đại, màng RO sản xuất tại Hàn Quốc  có khả năng tăng gấp 1,5 lần hiệu suất lọc, loại bỏ đến 99,99% tạp chất, chất hữu cơ, chất gây mùi, vi khuẩn, virus, ion kim loại nặng có trong nước. Bên cạnh đó, tăng gấp 1,5 lần tuổi thọ lõi lọc, giúp người dùng tiết kiệm thời gian và chi phí thay lõi trong quá trình sử dụng. Đặc biệt, qua hệ lõi chức năng nước được bổ sung thêm hàm lượng lớn khoáng chất, tốt cho sức khỏe.  ",
-    img: "https://livotec.com/wp-content/uploads/2024/05/pc_loi-loc-1-1.jpg",
-  },
-  {
-    id: 3,
-    title: "DỊCH VỤ 5 SAO, BẢO HÀNH ĐẾN 36 THÁNG",
-    description:
-      "Livotec mang đến dịch vụ chăm sóc khách hàng chuẩn 5 sao, thời gian bảo hành lên đến 36 tháng cho mọi sản phẩm để người dùng an tâm chăm sóc sức khỏe mỗi ngày.  ",
-    img: "https://livotec.com/wp-content/uploads/2024/04/livotec-bao-hanh-36-thang-dich-vu-5-sao.jpg.webp",
-  },
-]);
-</script>
+<script setup></script>
 
 <style scoped></style>
