@@ -1,6 +1,6 @@
 <template>
   <div>
-    <slot class="container"></slot>
+    <slot class="container select-none"></slot>
   </div>
 </template>
 

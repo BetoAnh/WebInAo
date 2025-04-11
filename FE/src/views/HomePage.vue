@@ -3,7 +3,7 @@
     <HomeHeroSlideComponent />
     <div class="pb-10 flex flex-col gap-10">
       <ProductComponent :categorySlug="'ao-thun'" />
-      <ProductComponent :categorySlug="'ao-polo'" />
+      <ProductComponent :categorySlug="'ao-hoodie'" />
     </div>
   </a-flex>
 </template>

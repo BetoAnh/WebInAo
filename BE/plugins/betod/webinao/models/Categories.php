@@ -38,5 +38,9 @@ class Categories extends Model
      */
     public $rules = [
     ];
+    public function afterSave()
+    {
+        \Cache::forget('category_' . $this->slug);
+    }
 
 }

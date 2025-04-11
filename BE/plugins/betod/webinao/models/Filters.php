@@ -15,13 +15,19 @@ class Filters extends Model
      * @var string table in the database used by the model.
      */
     public $table = 'betod_webinao_filters';
-    
+
     public $belongsTo = [
         'category' => ['Betod\Webinao\Models\Categories', 'key' => 'category_id']
     ];
     protected $jsonable = [
         'options'
     ];
+
+    public function afterSave()
+    {
+        \Cache::forget('filter_' . $this->slug);
+    }
+
     /**
      * @var array rules for validation.
      */

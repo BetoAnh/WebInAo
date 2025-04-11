@@ -1,5 +1,5 @@
 <template>
-  <div v-html="items.summary" class="post"></div>
+  <div v-html="items.content_html" class="post"></div>
 </template>
 
 <script setup>
@@ -29,5 +29,8 @@ defineProps({
   position: absolute;
   left: 0;
   top: -5px;
+}
+.post p:has(strong) {
+  margin-top: 10px;
 }
 </style>

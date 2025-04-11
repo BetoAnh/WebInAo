@@ -50,6 +50,11 @@ class Products extends Model
     public $rules = [
     ];
 
+    public function afterSave()
+    {
+        \Cache::forget('product_' . $this->slug);
+    }
+
     public function afterAttach($relationName)
     {
         if ($relationName === 'image' && $this->image) {

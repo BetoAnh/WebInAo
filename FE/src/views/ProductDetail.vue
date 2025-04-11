@@ -75,14 +75,14 @@
                       activeImage?.type === 'front' &&
                       product?.front_template?.path
                     "
-                    class="absolute z-10 left-[50%] translate-x-[-50%] top-[55%] translate-y-[-50%] flex"
+                    class="absolute w-[50%] z-10 left-[50%] translate-x-[-50%] top-[50%] translate-y-[-50%] flex justify-center items-center"
                   >
                     <a-image
                       :src="product?.front_template?.path"
                       alt="Template Image"
                       :previewMask="false"
                       :preview="false"
-                      width="100%"
+                      width="90%"
                     ></a-image>
                   </div>
                   <div
@@ -90,14 +90,14 @@
                       activeImage?.type === 'back' &&
                       product?.back_template?.path
                     "
-                    class="absolute z-10 left-[50%] translate-x-[-50%] top-[55%] translate-y-[-50%] flex"
+                    class="absolute w-[50%] z-10 left-[50%] translate-x-[-50%] top-[50%] translate-y-[-50%] flex justify-center items-center"
                   >
                     <a-image
                       :src="product?.back_template?.path"
                       alt="Template Image"
                       :previewMask="false"
                       :preview="false"
-                      width="100%"
+                      width="90%"
                     ></a-image>
                   </div>
                 </a-flex>
@@ -275,16 +275,29 @@
                 >
                 <a-flex>
                   <a-flex class="justify-evenly w-full">
-                    <div
-                      v-for="color in availableColors"
-                      :key="color.id"
-                      @click="selectColor(color)"
-                    >
+                    <div v-for="color in availableColors" :key="color.id">
                       <a-popover>
                         <template #content>
-                          <p class="font-semibold">{{ color.name }}</p>
+                          <div class="flex flex-col items-center">
+                            <p class="font-semibold">{{ color.name }}</p>
+                            <p
+                              v-if="
+                                !isColorAvailableForSize(
+                                  variant.size,
+                                  color.name
+                                )
+                              "
+                              class="text-red-400 text-[12px]"
+                            >
+                              (Hết hàng)
+                            </p>
+                          </div>
                         </template>
                         <div
+                          v-if="
+                            isColorAvailableForSize(variant.size, color.name)
+                          "
+                          @click="selectColor(color)"
                           class="w-10 h-10 rounded-full transition-all border-2 border-gray-200 hover:shadow-gray-400 hover:border-white hover:shadow-md flex items-center justify-center cursor-pointer"
                           :style="{
                             backgroundColor: color.value,
@@ -300,6 +313,14 @@
                             "
                           />
                         </div>
+                        <div
+                          v-else
+                          class="w-10 h-10 rounded-full transition-all border-2 border-gray-200 hover:shadow-gray-400 hover:border-white hover:shadow-md flex items-center justify-center cursor-not-allowed"
+                          :style="{
+                            backgroundColor: color.value,
+                            position: 'relative',
+                          }"
+                        ></div>
                       </a-popover></div></a-flex></a-flex></a-flex
             ></a-flex>
             <!-- size -->
@@ -317,6 +338,7 @@
                     :options="availableSizes"
                     class="w-full"
                     placeholder="--Chọn size--"
+                    @change="changeSize"
                   ></a-select></a-flex></a-flex
             ></a-flex>
             <!-- mặt in -->
@@ -555,6 +577,26 @@ const availableColors = computed(() => {
   const variantColors = new Set(product.value.variant.map((v) => v.color));
   return colors.value.filter((color) => variantColors.has(color.name));
 });
+
+function isColorAvailableForSize(size, color) {
+  return product.value.variant.some(
+    (v) => v.size === size && v.color === color
+  );
+}
+
+const changeSize = () => {
+  const matchedVariant = product.value.variant.find(
+    (v) => v.size === variant.size
+  );
+  if (matchedVariant) {
+    const matchedColor = colors.value.find(
+      (v) => v.name === matchedVariant.color
+    );
+    selectColor(matchedColor);
+  } else {
+    console.log("Không tìm thấy biến thể phù hợp");
+  }
+};
 
 const fetchProduct = async () => {
   try {
